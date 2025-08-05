@@ -20,4 +20,15 @@ public class CardView : MonoBehaviour
         imageSR.sprite = card.Image;
         //wrapper.SetActive(true);
     }
+    private void OnMouseEnter()
+    {
+        wrapper.SetActive(false);
+        Vector3 position = new (transform.position.x, -2, 0);
+        CardViewHoverSystem.Instance.Show(Card, position);
+    }
+    private void OnMouseExit()
+    {
+        CardViewHoverSystem.Instance.Hide();
+        wrapper.SetActive(true);
+    }
 }

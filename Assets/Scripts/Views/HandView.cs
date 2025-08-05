@@ -2,6 +2,7 @@ using DG.Tweening;
 using NUnit.Framework;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Splines;
 
@@ -14,6 +15,23 @@ public class HandView : MonoBehaviour
     {
         cards.Add(cardView);
         yield return UpdateCardPositions(0.15f);
+    }
+
+    public CardView RemoveCard(Card card)
+    {
+        CardView cardView = GetCardView(card);
+        if (cardView != null)
+        {
+            cards.Remove(cardView);                     // Kartý listeden kaldýr
+            StartCoroutine(UpdateCardPositions(0.15f)); // Kartlarýn pozisyonlarýný güncelle
+            return cardView;
+        }
+        return null; // cardView == null ise
+    }
+
+    private CardView GetCardView(Card card)
+    {
+        return cards.Where(CardView => CardView.Card == card).FirstOrDefault();
     }
 
     private IEnumerator UpdateCardPositions(float duration)

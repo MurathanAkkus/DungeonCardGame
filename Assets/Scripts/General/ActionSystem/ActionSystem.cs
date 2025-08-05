@@ -124,7 +124,6 @@ public class ActionSystem : Singleton<ActionSystem>
         else
         {
             subs.Add(typeof(T), new List<Action<GameAction>> { wrappedReaction }); // Yoksa yeni liste oluþtur
-            subs[typeof(T)].Add(wrappedReaction);
         }
     }
 

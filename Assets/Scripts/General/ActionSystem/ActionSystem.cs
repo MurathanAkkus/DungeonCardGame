@@ -14,7 +14,6 @@ public class ActionSystem : Singleton<ActionSystem>
     private static Dictionary<Type, Func<GameAction, IEnumerator>> performers = new();
     private static Dictionary<Type, List<Action<GameAction>>> postSubs = new();
 
-    
     public void Perform(GameAction action, Action OnPerformFinished = null)
     {   // Bir eylemi baþladýðýnda
         if (State == ActionState.Performing)

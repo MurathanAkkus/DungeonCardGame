@@ -19,6 +19,7 @@ public class CardSystem : Singleton<CardSystem>
         Debug.Log("CardSystem OnEnable");
         ActionSystem.AttachPerformer<DrawCardsGA>(DrawCardsPerformer);
         ActionSystem.AttachPerformer<DiscardAllCardsGA>(DiscardAllCardsPerformer);
+        ActionSystem.AttachPerformer<PlayCardGA>(PlayCardPerformer);
         ActionSystem.SubscribeReaction<EnemyTurnGA>(EnemyTurnPreReaction, ReactionTiming.PRE);
         ActionSystem.SubscribeReaction<EnemyTurnGA>(EnemyTurnPostReaction, ReactionTiming.POST);
     }
@@ -26,6 +27,7 @@ public class CardSystem : Singleton<CardSystem>
     {   // Sistem devre dýþý olduðunda abonelikleri kaldýrýr
         ActionSystem.DetachPerformer<DrawCardsGA>();
         ActionSystem.DetachPerformer<DiscardAllCardsGA>();
+        ActionSystem.DetachPerformer<PlayCardGA>();
         ActionSystem.UnsubscribeReaction<EnemyTurnGA>(EnemyTurnPreReaction, ReactionTiming.PRE);
         ActionSystem.UnsubscribeReaction<EnemyTurnGA>(EnemyTurnPostReaction, ReactionTiming.POST);
     }
@@ -66,6 +68,14 @@ public class CardSystem : Singleton<CardSystem>
             yield return DiscardCard(cardView);             // Kartýn görselini ýskartaya taþý(animasyonla)
         }
         hand.Clear();                                   // Eldeki kartlarý temizle
+    }
+
+    private IEnumerator PlayCardPerformer(PlayCardGA playCardGA)
+    {   // Kart oynama aksiyonu gerçekleþtiðinde çaðrýlýr
+        hand.Remove(playCardGA.Card);                             // Elden kartý çýkar
+        CardView cardView = handView.RemoveCard(playCardGA.Card); // Kartýn görselini eldeki kartlardan çýkar
+        yield return DiscardCard(cardView);                       // Kartýn görselini ýskartaya taþý(animasyonla)
+        // Efektler veya diðer iþlemler burada yapýlabilir
     }
 
     // -------------------------- Reactions --------------------------

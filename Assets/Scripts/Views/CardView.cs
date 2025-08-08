@@ -4,12 +4,14 @@ using UnityEngine;
 using static UnityEditor.Progress;
 public class CardView : MonoBehaviour
 {
+    [Header("CardView Data Settings")]
     [SerializeField] private TMP_Text title;            // Kart baþlýðýný göstermek için TMP_Text referansý
     [SerializeField] private TMP_Text description;      // Kart açýklamasýný göstermek için TMP_Text referansý
     [SerializeField] private TMP_Text mana;             // Kartýn mana deðerini göstermek için TMP_Text referansý
-
+    [Header("CardView Visual Settings")]
     [SerializeField] private SpriteRenderer imageSR;    // Kart görselini göstermek için SpriteRenderer referansý
     [SerializeField] private GameObject wrapper;        // Kartýn etrafýndaki görsel sarmalayýcý (örneðin çerçeve)
+    [SerializeField] private LayerMask dropLayer;       // Kartýn býrakýlabileceði katman
 
     public Card Card { get; private set; }              // Bu CardView'da gösterilen kart nesnesi
 
@@ -87,9 +89,10 @@ public class CardView : MonoBehaviour
         }
 
         // Kartýn býrakýldýðý yerde bir hedef var mý kontrol edilir
-        if (Physics.Raycast(transform.position, Vector3.forward, out RaycastHit hit, 10f))
+        if (Physics.Raycast(transform.position, Vector3.forward, out RaycastHit hit, 10f, dropLayer))
         {
-            // Kart oynama iþlemleri burada yapýlabilir
+            PlayCardGA playCardGA = new PlayCardGA(Card); // Kart oynama aksiyonu oluþturulur
+            ActionSystem.Instance.Perform(playCardGA);    // Aksiyon sisteme eklenir 
         }
         else
         {

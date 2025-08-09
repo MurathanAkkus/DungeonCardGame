@@ -10,15 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b99aeb6abf3edcc47b1cd8b7d1106354, type: 3}
-  m_Name: Fireball
+  m_Name: Draw
   m_EditorClassIdentifier: 
-  <Description>k__BackingField: Deal 4 damage to an enemy.
-  <Mana>k__BackingField: 2
-  <Image>k__BackingField: {fileID: 21300000, guid: 8782810a0dc9793498f4623ecc988cb5, type: 3}
+  <Description>k__BackingField: Draw 2 cards.
+  <Mana>k__BackingField: 1
+  <Image>k__BackingField: {fileID: 21300000, guid: 7527d4eb00583e94fb4795d5eb386c54, type: 3}
   <Effects>k__BackingField:
-  - rid: -2
+  - rid: 3410941471964528896
   references:
     version: 2
     RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
+    - rid: 3410941471964528896
+      type: {class: DrawCardsEffect, ns: , asm: Assembly-CSharp}
+      data:
+        drawAmount: 2

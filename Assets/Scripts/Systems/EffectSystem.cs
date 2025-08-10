@@ -17,8 +17,8 @@ public class EffectSystem : MonoBehaviour
 
     private IEnumerator PerformEffectPerformer(PerformEffectGA performEffectGA)
     {
-        GameAction effectAction = performEffectGA.Effect.GetGameAction();
-        ActionSystem.Instance.AddReaction(effectAction);
-        yield return null;
+        GameAction effectAction = performEffectGA.Effect.GetGameAction();       // PerformEffectGA içindeki Effect nesnesinden ilgili GameAction'ý alýr
+        ActionSystem.Instance.AddReaction(effectAction);                        // Alýnan GameAction'ý ActionSystem'e bir reaksiyon olarak ekler
+        yield return null;                                                      // Coroutine'in bir sonraki frame'e geçmesini saðlar
     }
 }

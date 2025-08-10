@@ -89,7 +89,8 @@ public class CardView : MonoBehaviour
         }
 
         // Kartýn býrakýldýðý yerde bir hedef var mý kontrol edilir
-        if (Physics.Raycast(transform.position, Vector3.forward, out RaycastHit hit, 10f, dropLayer))
+        if (ManaSystem.Instance.HasEnoughMana(Card.Mana) 
+            && Physics.Raycast(transform.position, Vector3.forward, out RaycastHit hit, 10f, dropLayer))
         {
             PlayCardGA playCardGA = new PlayCardGA(Card); // Kart oynama aksiyonu oluþturulur
             ActionSystem.Instance.Perform(playCardGA);    // Aksiyon sisteme eklenir 

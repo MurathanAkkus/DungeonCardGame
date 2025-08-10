@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public class PerformEffectGA : GameAction
 {
     public Effect Effect { get; set; }

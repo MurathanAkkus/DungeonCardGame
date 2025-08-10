@@ -75,7 +75,11 @@ public class CardSystem : Singleton<CardSystem>
         hand.Remove(playCardGA.Card);                             // Elden kartý çýkar
         CardView cardView = handView.RemoveCard(playCardGA.Card); // Kartýn görselini eldeki kartlardan çýkar
         yield return DiscardCard(cardView);                       // Kartýn görselini ýskartaya taþý(animasyonla)
+
         // Efektler veya diðer iþlemler burada
+        SpendManaGA spendManaGA = new SpendManaGA(playCardGA.Card.Mana); // Kartýn mana bedelini harca
+        ActionSystem.Instance.AddReaction(spendManaGA);                  // Mana harcama aksiyonunu ekle
+
         foreach (var effect in playCardGA.Card.Effects)
         {   // Kartýn efektlerini uygula
             PerformEffectGA performEffectGA = new PerformEffectGA(effect);

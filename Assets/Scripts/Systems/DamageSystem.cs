@@ -21,6 +21,20 @@ public class DamageSystem : MonoBehaviour
             target.Damage(dealDamageGA.Amount);
             Instantiate(damageVFX, target.transform.position, Quaternion.identity);
             yield return new WaitForSeconds(0.15f); // Hasar animasyonu için bekle
+            if (target.CurrentHealth <= 0)
+            {
+                // Eðer hedefin caný sýfýr veya altýna düþtüyse, düþmaný öldür
+                if (target is EnemyView enemyView)
+                {
+                    KillEnemyGA killEnemyGA = new KillEnemyGA(enemyView);
+                    ActionSystem.Instance.AddReaction(killEnemyGA);
+                }
+                else
+                {
+                    // Game Over logic eklenecek
+                    // GameOver sahnesine geçiþ yapabiliriz
+                }
+            }
         }
         // yield return null; // Bir sonraki kareye geçmeden önce bekle
     }

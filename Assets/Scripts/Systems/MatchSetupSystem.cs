@@ -1,15 +1,18 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 // Oyun baþlatýldýðýnda destedeki kartlarý hazýrlayan ve oyuncunun eline baþlangýç kartlarýný daðýtan sistemi temsil eder.
 // CardSystem ve ActionSystem ile etkileþime girerek, oyun baþlangýcýnda gerekli kurulum iþlemlerini otomatik olarak gerçekleþtirir.
 public class MatchSetupSystem : MonoBehaviour
 {
-    // Oyuncunun veya rakibin destesinde bulunacak kart verilerini tutan liste
+    // Oyuncunun ve rakibin destesinde bulunacak kart verileri
     [SerializeField] private HeroData heroData;
+    [SerializeField] private List<EnemyData> enemyDatas;
 
     private void Start()
     {   
         HeroSystem.Instance.Setup(heroData);
+        EnemySystem.Instance.Setup(enemyDatas);
         // CardSystem'i baþlatýr ve destedeki kart verilerini sisteme aktarýr
         // Böylece oyun baþýnda hangi kartlarýn kullanýlacaðý belirlenir
         CardSystem.Instance.Setup(heroData.Deck);

@@ -4,8 +4,8 @@ public class HeroView : CombatantView
 {
     // Kahraman görünümünü varsayýlan canla ve sprite olmadan baþlatýr.
     // Bu yöntem yeni eklendi ve kahraman için temel deðerleri ayarlar.
-    public void Setup()
+    public void Setup(HeroData heroData)
     {
-        SetupBase(40, null);
+        SetupBase(heroData.Health, heroData.Image);
     }
 }

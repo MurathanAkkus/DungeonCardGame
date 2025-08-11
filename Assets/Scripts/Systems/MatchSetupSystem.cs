@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 // Oyun baþlatýldýðýnda destedeki kartlarý hazýrlayan ve oyuncunun eline baþlangýç kartlarýný daðýtan sistemi temsil eder.
@@ -6,12 +5,14 @@ using UnityEngine;
 public class MatchSetupSystem : MonoBehaviour
 {
     // Oyuncunun veya rakibin destesinde bulunacak kart verilerini tutan liste
-    [SerializeField] private List<CardData> deckData;
+    [SerializeField] private HeroData heroData;
 
     private void Start()
-    {   // CardSystem'i baþlatýr ve destedeki kart verilerini sisteme aktarýr
+    {   
+        HeroSystem.Instance.Setup(heroData);
+        // CardSystem'i baþlatýr ve destedeki kart verilerini sisteme aktarýr
         // Böylece oyun baþýnda hangi kartlarýn kullanýlacaðý belirlenir
-        CardSystem.Instance.Setup(deckData);
+        CardSystem.Instance.Setup(heroData.Deck);
 
         // 5 kart çekmek için bir DrawCardsGA (Game Action) nesnesi oluþturulur
         // Bu, oyuncunun eline baþlangýçta 5 kart gelmesini saðlar

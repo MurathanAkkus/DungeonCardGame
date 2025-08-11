@@ -1,6 +1,5 @@
 using TMPro;
 using UnityEngine;
-
 public class CombatantView : MonoBehaviour
 {
     [SerializeField] private TMP_Text healthText;

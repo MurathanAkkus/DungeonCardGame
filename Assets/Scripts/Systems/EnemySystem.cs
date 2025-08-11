@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,10 +9,12 @@ public class EnemySystem : Singleton<EnemySystem>
     void OnEnable()
     {
         ActionSystem.AttachPerformer<EnemyTurnGA>(EnemyTurnPerformer);
+        ActionSystem.AttachPerformer<AttackHeroGA>(AttackHeroPerformer);
     }
     void OnDisable()
     {
         ActionSystem.DetachPerformer<EnemyTurnGA>();
+        ActionSystem.DetachPerformer<AttackHeroGA>();
     }
 
     public void Setup(List<EnemyData> enemyDatas)
@@ -23,12 +26,30 @@ public class EnemySystem : Singleton<EnemySystem>
     }
 
     // Performers
-    IEnumerator EnemyTurnPerformer(EnemyTurnGA enemyTurnGA)
+    private IEnumerator EnemyTurnPerformer(EnemyTurnGA enemyTurnGA)
     {
-        Debug.Log("Enemy Turn!");
-        // Düþmanýn perform'unun tamamlanmasýný bekle
-        yield return new WaitForSeconds(2f); // Düþman turu için gereken süreyi simüle et
-        // Performers tamamlandýktan sonra düþman turunun bitiþini bildir
-        Debug.Log("Enemy Turn Ended!");
+        foreach (var enemy in enemyBoardView.EnemyViews)
+        {
+            // Düþmanlarýn sýrayla hamle yapmasýný saðla
+            AttackHeroGA attackHeroGA = new AttackHeroGA(enemy);
+            ActionSystem.Instance.AddReaction(attackHeroGA);
+        }
+        yield return null; // Bir sonraki kareye geçmeden önce bekle
+    }
+
+    private IEnumerator AttackHeroPerformer(AttackHeroGA attackHeroGA)
+    {
+        EnemyView attacker = attackHeroGA.Attacker;
+        Tween tween = attacker.transform.DOMoveX(attacker.transform.position.x - 1f, 0.15f);
+        yield return tween.WaitForCompletion(); // Tween tamamlanana kadar bekle
+        attacker.transform.DOMoveX(attacker.transform.position.x + 1f, 0.15f)
+            .OnComplete(() => 
+            {
+                // Saldýrý sonrasý yapýlacak iþlemler
+                Debug.Log($"{attacker.name} saldýrdý!");
+            });
+        // Deal Damage to Hero
+        DealDamageGA dealDamageGA = new DealDamageGA(attacker.AttackPower, new List<CombatantView> { HeroSystem.Instance.HeroView });
+        ActionSystem.Instance.AddReaction(dealDamageGA);
     }
 }

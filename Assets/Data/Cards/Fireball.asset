@@ -13,14 +13,24 @@ MonoBehaviour:
   m_Name: Fireball
   m_EditorClassIdentifier: 
   <Description>k__BackingField: Deal 4 damage to a random enemy.
-  <Mana>k__BackingField: 2
+  <Mana>k__BackingField: 1
   <Image>k__BackingField: {fileID: 21300000, guid: 8782810a0dc9793498f4623ecc988cb5, type: 3}
-  <Effects>k__BackingField:
-  - rid: 3410941519082291450
+  <ManualTargetEffect>k__BackingField:
+    rid: -2
+  <OtherEffects>k__BackingField:
+  - <TargetMode>k__BackingField:
+      rid: 3410941519082291455
+    <Effect>k__BackingField:
+      rid: 3410941519082291456
   references:
     version: 2
     RefIds:
-    - rid: 3410941519082291450
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 3410941519082291455
+      type: {class: RandomEnemyTM, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 3410941519082291456
       type: {class: DealDamageEffect, ns: , asm: Assembly-CSharp}
       data:
         damageAmount: 4

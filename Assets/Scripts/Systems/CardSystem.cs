@@ -63,7 +63,6 @@ public class CardSystem : Singleton<CardSystem>
     {   // Elindeki tüm kartlarý discard etme aksiyonu gerçekleþtiðinde çaðrýlýr
         foreach (var card in hand)
         {
-            discardPile.Add(card);                          // Kartý ýskartaya ekle
             CardView cardView = handView.RemoveCard(card);  // Kartý discard destesine ekle
             yield return DiscardCard(cardView);             // Kartýn görselini ýskartaya taþý(animasyonla)
         }
@@ -80,9 +79,10 @@ public class CardSystem : Singleton<CardSystem>
         SpendManaGA spendManaGA = new SpendManaGA(playCardGA.Card.Mana); // Kartýn mana bedelini harca
         ActionSystem.Instance.AddReaction(spendManaGA);                  // Mana harcama aksiyonunu ekle
 
-        foreach (var effect in playCardGA.Card.Effects)
+        foreach (var effectWrapper in playCardGA.Card.OtherEffects)
         {   // Kartýn efektlerini uygula
-            PerformEffectGA performEffectGA = new PerformEffectGA(effect);
+            List<CombatantView> targets = effectWrapper.TargetMode.GetTargets(); // Hedefleri al
+            PerformEffectGA performEffectGA = new PerformEffectGA(effectWrapper.Effect, targets);
             ActionSystem.Instance.AddReaction(performEffectGA);
         }
     }
@@ -122,6 +122,7 @@ public class CardSystem : Singleton<CardSystem>
 
     private IEnumerator DiscardCard(CardView cardView)
     {   // Kartý discard destesine atma animasyonunu oynatýr ve görseli yok eder
+        discardPile.Add(cardView.Card);                                         // Kartý ýskarta destesine ekle
         cardView.transform.DOScale(Vector3.zero, 0.15f);                            // Kartý küçült
         Tween tween = cardView.transform.DOMove(discardPilePoint.position, 0.15f);  // Kartý discard noktasýna taþý(sað aþaðýda)
         yield return tween.WaitForCompletion();                                     // Animasyonun bitmesini bekle

@@ -79,6 +79,13 @@ public class CardSystem : Singleton<CardSystem>
         SpendManaGA spendManaGA = new SpendManaGA(playCardGA.Card.Mana); // Kartýn mana bedelini harca
         ActionSystem.Instance.AddReaction(spendManaGA);                  // Mana harcama aksiyonunu ekle
 
+        if (playCardGA.Card.ManualTargetEffects != null)
+        {   // Kartýn manuel hedefleme efektleri varsa, bu hedefi uygula
+            PerformEffectGA performEffectGA = 
+                new PerformEffectGA(playCardGA.Card.ManualTargetEffects, new List<CombatantView>() { playCardGA.ManualTarget }); // Manuel hedefleme efektini uygula
+            ActionSystem.Instance.AddReaction(performEffectGA);
+        }
+
         foreach (var effectWrapper in playCardGA.Card.OtherEffects)
         {   // Kartýn efektlerini uygula
             List<CombatantView> targets = effectWrapper.TargetMode.GetTargets(); // Hedefleri al
@@ -96,7 +103,6 @@ public class CardSystem : Singleton<CardSystem>
     }
     private void EnemyTurnPostReaction(EnemyTurnGA enemyTurnGA)
     {    // Düþman turu bittikten sonra 5 kart çekmek için reaction ekler
-        Debug.Log("EnemyTurnPostReaction tetiklendi");
         if (drawPile.Count > 0)
         {
             DrawCardsGA drawCardsGA = new DrawCardsGA(5);

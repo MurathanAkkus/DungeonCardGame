@@ -30,7 +30,12 @@ public class ManaSystem : Singleton<ManaSystem>
 
     public bool HasEnoughMana(int mana)
     {   // Yeterli mana olup olmadýðýný kontrol eder.
-        return currentMana >= mana;
+        if (currentMana < mana)
+        {   
+            manaUI.ShowNotEnoughManaEffect(); // Yeterli mana yoksa UI'da uyarý gösterir
+            return false;
+        }
+        return true;
     }
 
     

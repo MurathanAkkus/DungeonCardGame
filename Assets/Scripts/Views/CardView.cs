@@ -40,9 +40,8 @@ public class CardView : MonoBehaviour
     }
     void OnMouseExit()
     {
-        if (!Interactions.Instance.PlayerCanHover())
-        {
-            // Oyuncunun kartýn üzerine gelip detaylarýný görebilmesi için gerekli þartlarýn saðlanýp saðlanmadýðýný kontrol eder.
+        if (Interactions.Instance == null || !Interactions.Instance.PlayerCanHover())
+        {   // Oyuncunun kartýn üzerine gelip detaylarýný görebilmesi için gerekli þartlarýn saðlanýp saðlanmadýðýný kontrol eder.
             return; // Eðer hover(üzerine gelme) mümkün deðilse, fonksiyonun devamý çalýþmaz ve kart büyütülerek gösterilmez.
         }
         // Hover görünümü kapatýlýr ve çerçeve tekrar gösterilir
@@ -57,16 +56,23 @@ public class CardView : MonoBehaviour
         {   // Oyuncunun kartý týklayarak sürükleyip býrakma gibi iþlemleri yapýp yapamayacaðýný kontrol eder. 
             return; // Eðer etkileþim mümkün deðilse, fonksiyonun devamý çalýþmaz ve iþlem iptal edilir.
         }
-        // Sürükleme baþlatýlýr
-        Interactions.Instance.PlayerIsDragging = true;                      
-        wrapper.SetActive(true);                                            
-        CardViewHoverSystem.Instance.Hide();
-        // Sürükleme baþlangýç pozisyonu ve rotasyonu kaydedilir
-        dragStartPosition = transform.position;
-        dragStartRotation = transform.rotation;
-        // Kart düz hale getirilir ve mouse pozisyonuna taþýnýr
-        transform.rotation = Quaternion.Euler(0, 0, 0);
-        transform.position = MouseUtil.GetMousePositionInWorldSpace(-1);
+        if (Card.ManualTargetEffects != null)
+        {
+            ManualTargetSystem.Instance.StartTargeting(transform.position);
+        }
+        else
+        {
+            // Sürükleme baþlatýlýr
+            Interactions.Instance.PlayerIsDragging = true;
+            wrapper.SetActive(true);
+            CardViewHoverSystem.Instance.Hide();
+            // Sürükleme baþlangýç pozisyonu ve rotasyonu kaydedilir
+            dragStartPosition = transform.position;
+            dragStartRotation = transform.rotation;
+            // Kart düz hale getirilir ve mouse pozisyonuna taþýnýr
+            transform.rotation = Quaternion.Euler(0, 0, 0);
+            transform.position = MouseUtil.GetMousePositionInWorldSpace(-1);
+        }
     }
 
     // Kart sürüklenirken sürekli çalýþýr
@@ -75,6 +81,10 @@ public class CardView : MonoBehaviour
         if (!Interactions.Instance.PlayerCanInteract())
         {   // Bu kontroller, oyun akýþýnda yanlýþ zamanda veya istenmeyen durumlarda kartlarla etkileþimi ve hover efektini engellemek için kullanýlýr.
             return; // Böylece sadece uygun zamanlarda oyuncunun kartlarla etkileþime geçmesi saðlanýr.
+        }
+        if (Card.ManualTargetEffects != null)
+        {   // Eðer kartýn manuel hedefleme efektleri varsa,
+            return; // bu durumda kartý sürüklerken hedefleme sistemi kullanýlýr
         }
         // Kart mouse'un olduðu pozisyona taþýnýr
         transform.position = MouseUtil.GetMousePositionInWorldSpace(-1);
@@ -87,21 +97,32 @@ public class CardView : MonoBehaviour
         {
             return;
         }
-
-        // Kartýn býrakýldýðý yerde bir hedef var mý kontrol edilir
-        if (ManaSystem.Instance.HasEnoughMana(Card.Mana) 
-            && Physics.Raycast(transform.position, Vector3.forward, out RaycastHit hit, 10f, dropLayer))
-        {
-            PlayCardGA playCardGA = new PlayCardGA(Card); // Kart oynama aksiyonu oluþturulur
-            ActionSystem.Instance.Perform(playCardGA);    // Aksiyon sisteme eklenir 
+        if (Card.ManualTargetEffects != null)
+        {   // Eðer kartýn manuel hedefleme efektleri varsa,
+            EnemyView target = ManualTargetSystem.Instance.EndTargeting(MouseUtil.GetMousePositionInWorldSpace(-1));
+            if (target != null && ManaSystem.Instance.HasEnoughMana(Card.Mana))
+            {   // Hedef varsa ve yeterli mana varsa, kart oynama aksiyonu oluþturulur
+                PlayCardGA playCardGA = new PlayCardGA(Card, target);
+                ActionSystem.Instance.Perform(playCardGA); // Aksiyon sisteme eklenir
+            }
         }
         else
         {
-            // Geçerli bir hedef yoksa kart eski pozisyonuna ve rotasyonuna döner
-            transform.position = dragStartPosition;
-            transform.rotation = dragStartRotation;
+            // Kartýn býrakýldýðý yerde bir hedef var mý kontrol edilir
+            if (ManaSystem.Instance.HasEnoughMana(Card.Mana)
+                && Physics.Raycast(transform.position, Vector3.forward, out RaycastHit hit, 10f, dropLayer))
+            {
+                PlayCardGA playCardGA = new PlayCardGA(Card); // Kart oynama aksiyonu oluþturulur
+                ActionSystem.Instance.Perform(playCardGA);    // Aksiyon sisteme eklenir 
+            }
+            else
+            {
+                // Geçerli bir hedef yoksa kart eski pozisyonuna ve rotasyonuna döner
+                transform.position = dragStartPosition;
+                transform.rotation = dragStartRotation;
+            }
+            // Sürükleme iþlemi sona erer
+            Interactions.Instance.PlayerIsDragging = false;
         }
-        // Sürükleme iþlemi sona erer
-        Interactions.Instance.PlayerIsDragging = false;
     }
 }

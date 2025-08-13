@@ -7,6 +7,9 @@ public class MatchSetupSystem : MonoBehaviour
 {
     // Oyuncunun ve rakibin destesinde bulunacak kart verileri
     [SerializeField] private HeroData heroData;
+    // Oyuncunun alacaðý perk verisi
+    [SerializeField] private PerkData perkData;
+    // Rakiplerin verileri, bu veriler üzerinden rakiplerin özellikleri ve davranýþlarý belirlenir
     [SerializeField] private List<EnemyData> enemyDatas;
 
     private void Start()
@@ -16,6 +19,8 @@ public class MatchSetupSystem : MonoBehaviour
         // CardSystem'i baþlatýr ve destedeki kart verilerini sisteme aktarýr
         // Böylece oyun baþýnda hangi kartlarýn kullanýlacaðý belirlenir
         CardSystem.Instance.Setup(heroData.Deck);
+        // PerkSystem'i baþlatýr ve oyuncunun alacaðý perk verisini sisteme aktarýr
+        PerkSystem.Instance.AddPerk(new Perk(perkData));
 
         // 5 kart çekmek için bir DrawCardsGA (Game Action) nesnesi oluþturulur
         // Bu, oyuncunun eline baþlangýçta 5 kart gelmesini saðlar

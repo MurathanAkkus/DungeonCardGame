@@ -52,7 +52,7 @@ public class EnemySystem : Singleton<EnemySystem>
                 Debug.Log($"{attacker.name} saldýrdý!");
             });
         // Deal Damage to Hero
-        DealDamageGA dealDamageGA = new DealDamageGA(attacker.AttackPower, new List<CombatantView> { HeroSystem.Instance.HeroView });
+        DealDamageGA dealDamageGA = new DealDamageGA(attacker.AttackPower, new List<CombatantView> { HeroSystem.Instance.HeroView }, attackHeroGA.Caster);
         ActionSystem.Instance.AddReaction(dealDamageGA);
     }
 

@@ -1,4 +1,3 @@
-#if UNITY_EDITOR
 using System.Collections.Generic;
 using SerializeReferenceEditor.Editor.Settings;
 using SerializeReferenceEditor.Services;
@@ -74,7 +73,7 @@ namespace SerializeReferenceEditor.Editor.ClassReplacer
 			{
 				foreach (var obj in Selection.objects)
 				{
-                    if (obj != null && _processingObjects.Contains(obj.GetInstanceID()))
+                    if (_processingObjects.Contains(obj.GetInstanceID()))
                     	continue;
 
 					ProcessObject(obj);
@@ -155,4 +154,3 @@ namespace SerializeReferenceEditor.Editor.ClassReplacer
 		}
 	}
 }
-#endif

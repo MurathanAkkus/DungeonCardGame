@@ -3,12 +3,14 @@ using UnityEngine;
 
 public class PerkSystem : Singleton<PerkSystem>
 {
+    [SerializeField] private PerksUI perksUI;
     private readonly List<Perk> perks = new List<Perk>();
     public void AddPerk(Perk perk)
     {
         if (perk == null) 
             return;
         perks.Add(perk);
+        perksUI.AddPerkUI(perk);
         perk.OnAdd();
     }
 
@@ -17,6 +19,7 @@ public class PerkSystem : Singleton<PerkSystem>
         if (perk == null) 
             return;
         perks.Remove(perk);
+        perksUI.RemovePerkUI(perk);
         perk.OnRemove();
     }
 }

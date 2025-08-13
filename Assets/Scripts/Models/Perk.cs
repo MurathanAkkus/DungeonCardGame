@@ -25,7 +25,7 @@ public class Perk
 
     private void Reaction(GameAction gameAction)
     {
-        if (condition.SubConditionMet(gameAction))
+        if (condition.SubConditionIsMet(gameAction)) // Eðer alt koþul karþýlanýyorsa
         {
             List<CombatantView> targets = new List<CombatantView>();                  // Etki için hedefleri tutacak liste
 

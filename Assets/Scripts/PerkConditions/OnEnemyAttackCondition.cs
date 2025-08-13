@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class OnEnemyAttackCondition : PerkCondition
 {
-    public override bool SubConditionMet(GameAction action)
+    public override bool SubConditionIsMet(GameAction action)
     {   // Bu koþul her zaman saðlanýr, çünkü bu, avantajýn tetikleyicisidir.
         return true; // Saldýrganýn caný X'in üzerindeyse
     }

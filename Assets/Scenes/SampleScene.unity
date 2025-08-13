@@ -262,7 +262,7 @@ GameObject:
   - component: {fileID: 197311612}
   - component: {fileID: 197311614}
   - component: {fileID: 197311613}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1373,7 +1373,7 @@ GameObject:
   - component: {fileID: 851449900}
   - component: {fileID: 851449902}
   - component: {fileID: 851449901}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1542,6 +1542,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b2d0744152d4c045baae18f543320e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  perksUI: {fileID: 1026921063}
 --- !u!1 &927935858
 GameObject:
   m_ObjectHideFlags: 0
@@ -1554,7 +1555,7 @@ GameObject:
   - component: {fileID: 927935862}
   - component: {fileID: 927935861}
   - component: {fileID: 927935860}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1575,6 +1576,7 @@ RectTransform:
   m_Children:
   - {fileID: 1532206947}
   - {fileID: 1172615369}
+  - {fileID: 1026921061}
   m_Father: {fileID: 1095134694}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1815,6 +1817,82 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9c8dfd9bf45089e499af8d2aeaefbd7a, type: 2}
   - {fileID: 11400000, guid: 9c8dfd9bf45089e499af8d2aeaefbd7a, type: 2}
   - {fileID: 11400000, guid: 366aa6ceee3b47e42b2197cb7126bb17, type: 2}
+--- !u!1 &1026921060
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1026921061}
+  - component: {fileID: 1026921063}
+  - component: {fileID: 1026921062}
+  m_Layer: 5
+  m_Name: PerksUI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1026921061
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1026921060}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 927935859}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 60, y: -60}
+  m_SizeDelta: {x: 120, y: 120}
+  m_Pivot: {x: 0, y: 1}
+--- !u!114 &1026921062
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1026921060}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30649d3a9faa99c48a7b1166b86bf2a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 0
+  m_Spacing: 12
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 1
+  m_ChildControlWidth: 0
+  m_ChildControlHeight: 0
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
+--- !u!114 &1026921063
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1026921060}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95d10ad954bb3dd4f91c6093e0451e0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  perkUIPrefab: {fileID: 5652758495005788128, guid: 971c9077b4d6d304980f426d73c04b42, type: 3}
 --- !u!1 &1055198282
 GameObject:
   m_ObjectHideFlags: 0
@@ -1992,7 +2070,7 @@ GameObject:
   - component: {fileID: 1172615372}
   - component: {fileID: 1172615371}
   - component: {fileID: 1172615370}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: ManaUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2326,7 +2404,7 @@ GameObject:
   - component: {fileID: 1532206949}
   - component: {fileID: 1532206948}
   - component: {fileID: 1532206951}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: EndTurnButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}

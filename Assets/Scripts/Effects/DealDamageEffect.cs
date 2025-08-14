@@ -1,6 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// <summary>
+// DealDamageEffect.cs
+// Bu class, bir hedefe hasar veren bir etkiyi temsil eder.
+// </summary>
 public class DealDamageEffect : Effect
 {
     [SerializeField] private int damageAmount;

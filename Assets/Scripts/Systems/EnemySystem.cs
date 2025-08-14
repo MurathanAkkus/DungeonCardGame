@@ -2,7 +2,10 @@ using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+// <summary>
+// EnemySystem.cs
+// Bu class oyundaki düþman sistemini yönetir, düþmanlarýn turlarýný, saldýrýlarýný ve ölümlerini yönetir.
+// </summary>
 public class EnemySystem : Singleton<EnemySystem>
 {
     [SerializeField] private EnemyBoardView enemyBoardView;

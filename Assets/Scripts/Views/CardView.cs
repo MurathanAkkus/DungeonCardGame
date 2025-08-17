@@ -34,7 +34,7 @@ public class CardView : MonoBehaviour
             return;
         }
         wrapper.SetActive(false);                               // Kartýn çerçevesi gizlenir
-        Vector3 position = new (transform.position.x, -2, 0);   // Kart hover sisteminde kart büyük gösterilir
+        Vector3 position = new (transform.position.x, -2, 1);   // Kart hover sisteminde kart büyük gösterilir
         // Böylece oyuncu fareyle kartýn üzerine geldiðinde, kartýn detaylarýný daha büyük ve okunabilir þekilde görebilir.
         CardViewHoverSystem.Instance.Show(Card, position);      
     }

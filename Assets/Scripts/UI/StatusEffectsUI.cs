@@ -27,7 +27,8 @@ public class StatusEffectsUI : MonoBehaviour
                 statusEffectUIs.Add(statusEffectType, statusEffectUI);                          // Dictionary'ye ekle
             }
             Sprite sprite = GetSpriteByType(statusEffectType);                              // Durum efektine göre sprite'ý al
-            statusEffectUIs[statusEffectType].Set(sprite, stackCount);                      // UI'ya sprite ve yýðýn sayýsýný ayarla
+            Color color = GetColorByType(statusEffectType);
+            statusEffectUIs[statusEffectType].Set(sprite, stackCount, color);                      // UI'ya sprite ve yýðýn sayýsýný ayarla
         }
     }
 
@@ -38,6 +39,16 @@ public class StatusEffectsUI : MonoBehaviour
             StatusEffectType.ARMOR => armorSprite,
             StatusEffectType.BURN => burnSprite,
             _ => null
+        };
+    }
+
+    private Color GetColorByType(StatusEffectType statusEffectType)
+    {   // Durum efektine göre renkleri döndür
+        return statusEffectType switch
+        {
+            StatusEffectType.ARMOR => Color.deepSkyBlue,
+            StatusEffectType.BURN => new Color(1f, 0.3f, 0f),
+            _ => Color.black
         };
     }
 }

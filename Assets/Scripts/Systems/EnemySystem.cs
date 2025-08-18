@@ -36,11 +36,18 @@ public class EnemySystem : Singleton<EnemySystem>
     {
         foreach (var enemy in enemyBoardView.EnemyViews)
         {
-            // Düþmanlarýn sýrayla hamle yapmasýný saðla
+            int burnStacks = enemy.GetStatusEffectStackCount(StatusEffectType.BURN);
+
+            if ( burnStacks > 0)
+            {
+                ApplyBurnGA applyBurnGA = new(burnStacks, enemy);
+                ActionSystem.Instance.AddReaction(applyBurnGA);
+            }
+
             AttackHeroGA attackHeroGA = new AttackHeroGA(enemy);
             ActionSystem.Instance.AddReaction(attackHeroGA);
         }
-        yield return null; // Bir sonraki kareye geçmeden önce bekle
+        yield return null; 
     }
 
     private IEnumerator AttackHeroPerformer(AttackHeroGA attackHeroGA)

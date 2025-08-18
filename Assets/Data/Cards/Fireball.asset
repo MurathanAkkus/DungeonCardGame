@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b99aeb6abf3edcc47b1cd8b7d1106354, type: 3}
   m_Name: Fireball
   m_EditorClassIdentifier: 
-  <Description>k__BackingField: Deal 4 damage to a random enemy.
+  <Description>k__BackingField: Deal 4 damage to a selected enemy.
   <Mana>k__BackingField: 1
   <Image>k__BackingField: {fileID: 21300000, guid: 8782810a0dc9793498f4623ecc988cb5, type: 3}
   <ManualTargetEffect>k__BackingField:

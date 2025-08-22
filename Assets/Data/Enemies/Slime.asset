@@ -14,4 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Image>k__BackingField: {fileID: 21300000, guid: 60d200826cba5f5408393726bace19e9, type: 3}
   <Health>k__BackingField: 15
+  <StartingArmor>k__BackingField: 3
   <AttackPower>k__BackingField: 4

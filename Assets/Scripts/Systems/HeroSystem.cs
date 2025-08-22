@@ -25,7 +25,6 @@ public class HeroSystem : Singleton<HeroSystem>
         HeroView.Setup(heroData);
     }
 
-
     // -------------------------- Reactions --------------------------
     private void EnemyTurnPreReaction(EnemyTurnGA enemyTurnGA)
     {   // Düþman turu baþlamadan önce elindeki tüm kartlarý discard etmek için reaction ekler

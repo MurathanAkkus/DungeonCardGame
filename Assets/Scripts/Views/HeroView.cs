@@ -6,6 +6,6 @@ public class HeroView : CombatantView
     // Bu yöntem yeni eklendi ve kahraman için temel deðerleri ayarlar.
     public void Setup(HeroData heroData)
     {
-        SetupBase(heroData.Health, heroData.Image);
+        SetupBase(heroData.Health, heroData.Image, heroData.StartingArmor);
     }
 }

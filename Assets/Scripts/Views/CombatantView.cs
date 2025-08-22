@@ -1,7 +1,9 @@
-using DG.Tweening;
+﻿using DG.Tweening;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+
+[RequireComponent(typeof(SpriteRenderer))]
 public class CombatantView : MonoBehaviour
 {
     [SerializeField] private TMP_Text healthText;
@@ -10,13 +12,32 @@ public class CombatantView : MonoBehaviour
 
     public int MaxHealth { get; private set; }
     public int CurrentHealth { get; private set; }
+
     private Dictionary<StatusEffectType, int> statusEffects = new Dictionary<StatusEffectType, int>();
 
-    protected void SetupBase(int health, Sprite image)
+    protected void SetupBase(int health, Sprite image, int startingArmor)
     {
         MaxHealth = CurrentHealth = health;
-        spriteRenderer.sprite = image;
+
+        // Sprite null ise patlama
+        if (spriteRenderer != null && image != null)
+            spriteRenderer.sprite = image;
+
         UpdateHealthText();
+
+        // Başlangıç zırhını normalize et
+        startingArmor = Mathf.Max(0, startingArmor);
+
+        // Idempotent olsun istiyorum, mevcut ARMOR’u sıfırla
+        int existing = GetStatusEffectStackCount(StatusEffectType.ARMOR);
+        if (existing > 0)
+            RemoveStatusEffect(StatusEffectType.ARMOR, existing);
+
+        // Başlangıç zırhı
+        if (startingArmor > 0)
+        {
+            AddStatusEffect(StatusEffectType.ARMOR, startingArmor);
+        }
     }
 
     private void UpdateHealthText()
@@ -27,12 +48,12 @@ public class CombatantView : MonoBehaviour
     public void Damage(int damageAmount)
     {
         int currentArmor = GetStatusEffectStackCount(StatusEffectType.ARMOR);
-        int remainingDamage = Mathf.Max(damageAmount - currentArmor, 0);                       // Z�rhtan sonra kalan hasar� hesaplay�n
+        int remainingDamage = Mathf.Max(damageAmount - currentArmor, 0);                       // Zýrhtan sonra kalan hasarý hesaplayýn
 
         if (currentArmor > 0)
-            RemoveStatusEffect(StatusEffectType.ARMOR, Mathf.Min(damageAmount, currentArmor)); // Z�rh� hasar miktar� kadar azalt�n
+            RemoveStatusEffect(StatusEffectType.ARMOR, Mathf.Min(damageAmount, currentArmor)); // Zýrhý hasar miktarý kadar azaltýn
 
-        CurrentHealth = Mathf.Max(CurrentHealth - remainingDamage, 0);                         // Karakterin can�n� hasardan sonra kalan cana ayarla
+        CurrentHealth = Mathf.Max(CurrentHealth - remainingDamage, 0);                         // Karakterin canýný hasardan sonra kalan cana ayarla
 
         transform.DOShakePosition(0.2f, 0.5f);
         UpdateHealthText();

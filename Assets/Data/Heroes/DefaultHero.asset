@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: DefaultHero
   m_EditorClassIdentifier: 
   <Image>k__BackingField: {fileID: 21300000, guid: 962e5495d6f76594fac855fb7d1575a4, type: 3}
-  <Health>k__BackingField: 44
+  <Health>k__BackingField: 45
+  <StartingArmor>k__BackingField: 15
   <Deck>k__BackingField:
   - {fileID: 11400000, guid: bcc403032fae1ff4a88a71bfeee35ef6, type: 2}
   - {fileID: 11400000, guid: bcc403032fae1ff4a88a71bfeee35ef6, type: 2}

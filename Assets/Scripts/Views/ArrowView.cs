@@ -1,44 +1,145 @@
+ï»¿using System.Collections;
 using UnityEngine;
 
 /// <summary>
-/// Oku ve ok çizgisini görsel olarak yöneten sýnýf.
-/// Mouse konumuna göre ok baþý ve yönü güncellenir.
+/// Oku ve Ã§izgisini mouse konumuna gÃ¶re yÃ¶neten gÃ¶rÃ¼nÃ¼m.
+/// Update() yerine yalnÄ±zca gerektiÄŸinde Ã§alÄ±ÅŸan bir korutin kullanÄ±r.
 /// </summary>
+
+[RequireComponent(typeof(LineRenderer))]
 public class ArrowView : MonoBehaviour
 {
     [SerializeField] private GameObject arrowHead;
-    [SerializeField] private LineRenderer lineRenderer; // Ok çizgisi için
+    [SerializeField] private LineRenderer lineRenderer;
+    [SerializeField] private float headOffset = 0.5f;        // ok baÅŸÄ±nÄ± Ã§izgiden biraz geri Ã§eker
+    [SerializeField] private float minMoveThreshold = 0.01f; // mouse hareket eÅŸiÄŸi (world units)
 
+    private Transform headT;
     private Vector3 startPosition;
+    private Vector3 lastEndPos = new Vector3(float.NaN, float.NaN, float.NaN);
 
-    /// <summary>
-    /// Her karede ok baþý ve yönünü mouse konumuna göre günceller.
-    /// </summary>
-    private void Update()
+    private Coroutine trackCo;
+    private bool isTracking;
+    private bool trackRequested;
+
+    void Awake() => EnsureInit();
+    void OnValidate() => EnsureInit();
+    void OnDisable() => StopTracking(); // gÃ¼venlik
+
+    private void EnsureInit()
     {
-        // Mouse'un dünya koordinatlarýndaki konumunu al.
-        Vector3 endPosition = MouseUtil.GetMousePositionInWorldSpace();
-        // Baþlangýç pozisyonundan ok baþýna olan yönü hesapla ve normalize et.
-        Vector3 direction = -(startPosition - arrowHead.transform.position).normalized;
-        // Ok çizgisinin ucunu, ok baþý ile çakýþmamasý için ok baþýnýn yönünde 0.5 birim geriye alýr.
-        lineRenderer.SetPosition(1, endPosition - direction * 0.5f);
-        // Ok baþýný mouse konumuna taþý.
-        arrowHead.transform.position = endPosition;
-        // Ok baþýnýn yönünü ayarla.
-        arrowHead.transform.right = direction;
+        // arrowHead atanmÄ±ÅŸsa headT'yi doldur
+        if (arrowHead != null && headT == null)
+            headT = arrowHead.transform;
+
+        // LineRenderer inspectorâ€™da boÅŸsa aynÄ± objeden Ã§ek
+        if (lineRenderer == null)
+            lineRenderer = GetComponent<LineRenderer>();
     }
 
-
     /// <summary>
-    /// Okun baþlangýç pozisyonunu ayarlar ve LineRenderer'ý baþlatýr.
+    /// Okun baÅŸlangÄ±Ã§ pozisyonunu ayarlar ve istersen takibi baÅŸlatÄ±r.
     /// </summary>
-    /// <param name="startPosition">Okun dünya koordinatlarýndaki baþlangýç pozisyonu.</param>
-    public void SetupArrow(Vector3 startPosition)
+    public void SetupArrow(Vector3 startPosition, bool startTracking = true)
     {
+        EnsureInit();
+
+        if (headT == null || lineRenderer == null)
+        {
+            Debug.LogError("[ArrowView] Missing references (arrowHead/lineRenderer).", this);
+            enabled = false;
+            return;
+        }
+
         this.startPosition = startPosition;
-        // LineRenderer'ýn baþlangýç noktasýný ayarla.
+
+        // Ã‡izginin baÅŸlangÄ±cÄ±nÄ± sabitle
         lineRenderer.SetPosition(0, startPosition);
-        // LineRenderer'ýn bitiþ noktasýný mevcut mouse konumuna ayarla.
-        lineRenderer.SetPosition(1, MouseUtil.GetMousePositionInWorldSpace());
+
+        // Ä°lk gÃ¶rsel gÃ¼ncelleme
+        Vector3 endPos = MouseUtil.GetMousePositionInWorldSpace();
+        UpdateVisual(endPos, force: true);
+
+        if (startTracking)
+            StartTracking();
+    }
+
+    /// <summary>Takibi baÅŸlat (sadece gerektiÄŸinde Ã§alÄ±ÅŸÄ±r).</summary>
+    public void StartTracking()
+    {
+        trackRequested = true;                 // istek kaydÄ±
+        if (!isActiveAndEnabled) return;       // obje aktifleÅŸince baÅŸlayacaÄŸÄ±z
+
+        if (isTracking) return;
+        isTracking = true;
+        trackCo = StartCoroutine(TrackLoop());
+    }
+
+    /// <summary>Takibi durdur.</summary>
+    public void StopTracking()
+    {
+        trackRequested = false;
+        if (!isTracking) return;
+        isTracking = false;
+
+        if (trackCo != null)
+        {
+            StopCoroutine(trackCo);
+            trackCo = null;
+        }
+    }
+
+    private IEnumerator TrackLoop()
+    {
+        // her frame Ã§alÄ±ÅŸsÄ±n istiyorsan:
+        var wait = new WaitForEndOfFrame();
+        // 50 Hz iÃ§in: var wait = new WaitForSeconds(0.02f);
+
+        while (isTracking)
+        {
+            Vector3 endPos = MouseUtil.GetMousePositionInWorldSpace();
+
+            // KÃ¼Ã§Ã¼k hareketleri es geÃ§ (gereksiz hesap yok)
+            if ((endPos - lastEndPos).sqrMagnitude >= (minMoveThreshold * minMoveThreshold))
+                UpdateVisual(endPos);
+
+            yield return wait;
+        }
+    }
+
+    private void UpdateVisual(Vector3 endPos, bool force = false)
+    {
+        EnsureInit(); // ekstra gÃ¼venlik: baÅŸlatÄ±lmamÄ±ÅŸsa baÅŸlat
+
+        if (headT == null || lineRenderer == null) return;
+
+        lastEndPos = endPos;
+
+        // Ok baÅŸÄ±nÄ± mouse'a taÅŸÄ±
+        headT.position = endPos;
+
+        // YÃ¶n: start -> head
+        Vector3 dir = headT.position - startPosition;
+        if (dir.sqrMagnitude < 1e-6f) dir = Vector3.right;
+        else dir.Normalize();
+
+        // Ok baÅŸÄ±nÄ±n yÃ¶nÃ¼
+        headT.right = dir;
+
+        // Ã‡izgi ucu, ok baÅŸÄ±nÄ±n biraz gerisi
+        lineRenderer.SetPosition(1, endPos - dir * headOffset);
+    }
+
+    // Ä°steÄŸe baÄŸlÄ±: okun gÃ¶rÃ¼nÃ¼rlÃ¼ÄŸÃ¼nÃ¼ merkezi yerden kontrol etmek iÃ§in
+    public void Show(Vector3 startPos)
+    {
+        gameObject.SetActive(true);
+        SetupArrow(startPos, startTracking: true);
+    }
+
+    public void Hide()
+    {
+        StopTracking();
+        gameObject.SetActive(false);
     }
 }

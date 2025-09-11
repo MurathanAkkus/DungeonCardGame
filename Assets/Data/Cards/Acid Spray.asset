@@ -10,28 +10,32 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b99aeb6abf3edcc47b1cd8b7d1106354, type: 3}
-  m_Name: Armor Up
+  m_Name: Acid Spray
   m_EditorClassIdentifier: 
-  <Description>k__BackingField: Add <b>6 <color=blue>armor</color></b>.
+  <Description>k__BackingField: Reduce the target's armor by 5 and rest of the enemies
+    on the field by 1.
   <Mana>k__BackingField: 1
-  <Image>k__BackingField: {fileID: 21300000, guid: 6d5c718930917904690c996499833584, type: 3}
+  <Image>k__BackingField: {fileID: 21300000, guid: 60217384888f8e941a3f87f78b0d15ba, type: 3}
   <ManualTargetEffect>k__BackingField:
-    rid: -2
+    rid: 8631130184934752333
   <OtherEffects>k__BackingField:
   - <TargetMode>k__BackingField:
-      rid: 3410941580366577734
+      rid: 8631130255838412873
     <Effect>k__BackingField:
-      rid: 3410941580366577735
+      rid: 8631130255838412874
   references:
     version: 2
     RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
-    - rid: 3410941580366577734
-      type: {class: HeroTM, ns: , asm: Assembly-CSharp}
-      data: 
-    - rid: 3410941580366577735
+    - rid: 8631130184934752333
       type: {class: AddStatusEffectEffect, ns: , asm: Assembly-CSharp}
       data:
         statusEffectType: 0
-        stackCount: 6
+        stackCount: -5
+    - rid: 8631130255838412873
+      type: {class: OtherTM, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 8631130255838412874
+      type: {class: AddStatusEffectEffect, ns: , asm: Assembly-CSharp}
+      data:
+        statusEffectType: 0
+        stackCount: -1

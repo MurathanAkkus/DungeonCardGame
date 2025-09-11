@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b99aeb6abf3edcc47b1cd8b7d1106354, type: 3}
-  m_Name: Draw
+  m_Name: Steady Draw
   m_EditorClassIdentifier: 
-  <Description>k__BackingField: Draw 2 cards.
+  <Description>k__BackingField: <color=yellow><b>Draw</color> 2</b> cards.
   <Mana>k__BackingField: 1
-  <Image>k__BackingField: {fileID: 21300000, guid: 7527d4eb00583e94fb4795d5eb386c54, type: 3}
+  <Image>k__BackingField: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
   <ManualTargetEffect>k__BackingField:
     rid: -2
   <OtherEffects>k__BackingField:

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEngine;
 
 public class DealDamageGA : GameAction, IHaveCaster
 {
@@ -7,10 +6,13 @@ public class DealDamageGA : GameAction, IHaveCaster
     public List<CombatantView> Targets { get; private set; }
     public CombatantView Caster { get; private set; }
 
-    public DealDamageGA(int amount, List<CombatantView> targets, CombatantView caster)
+    public bool IgnoreArmor { get; private set; }
+
+    public DealDamageGA(int amount, List<CombatantView> targets, CombatantView caster, bool ignoreArmor = false)
     {
         Amount = amount;
         Targets = new List<CombatantView>(targets);
         Caster = caster;
+        IgnoreArmor = ignoreArmor;
     }
 }

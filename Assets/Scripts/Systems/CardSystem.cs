@@ -82,6 +82,8 @@ public class CardSystem : Singleton<CardSystem>
             ActionSystem.Instance.AddReaction(performEffectGA);
         }
 
+        OtherTM.MainTarget = playCardGA.ManualTarget;
+
         foreach (var effectWrapper in playCardGA.Card.OtherEffects)
         {   // Kartýn efektlerini uygula
             List<CombatantView> targets = effectWrapper.TargetMode.GetTargets(); // Hedefleri al

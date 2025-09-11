@@ -45,18 +45,44 @@ public class CombatantView : MonoBehaviour
         healthText.text = $"HP: {CurrentHealth}";
     }
 
-    public void Damage(int damageAmount)
+    public void Damage(int damageAmount, bool ignoreArmor = false)
     {
+        // Negatif/0 koruması (isteğe bağlı)
+        if (damageAmount <= 0)
+        {
+            // yine de küçük bir hit efekti istiyorsan buraya koyabilirsin
+            return;
+        }
+
         int currentArmor = GetStatusEffectStackCount(StatusEffectType.ARMOR);
-        int remainingDamage = Mathf.Max(damageAmount - currentArmor, 0);                       // Zýrhtan sonra kalan hasarý hesaplayýn
 
-        if (currentArmor > 0)
-            RemoveStatusEffect(StatusEffectType.ARMOR, Mathf.Min(damageAmount, currentArmor)); // Zýrhý hasar miktarý kadar azaltýn
+        // Zırhı YOK SAY: direkt cana uygula, zırh stack'ini düşürme
+        if (ignoreArmor)
+        {
+            CurrentHealth = Mathf.Max(CurrentHealth - damageAmount, 0);
+        }
+        else
+        {
+            // Zırh hasarı emer ve stack düşer
+            int remainingDamage = Mathf.Max(damageAmount - currentArmor, 0);
+            if (currentArmor > 0)
+                RemoveStatusEffect(StatusEffectType.ARMOR, Mathf.Min(damageAmount, currentArmor));
 
-        CurrentHealth = Mathf.Max(CurrentHealth - remainingDamage, 0);                         // Karakterin canýný hasardan sonra kalan cana ayarla
+            CurrentHealth = Mathf.Max(CurrentHealth - remainingDamage, 0);
+        }
 
+        // Ortak VFX/UI
         transform.DOShakePosition(0.2f, 0.5f);
         UpdateHealthText();
+
+        // (Opsiyonel) event/anim hook'ları
+        // OnDamaged?.Invoke(this, damageAmount, ignoreArmor);
+        // if (CurrentHealth == 0) Die();
+    }
+
+    public void PenetratingDamage(int damageAmount)
+    {
+        Damage(damageAmount, ignoreArmor: true);
     }
 
     public void AddStatusEffect(StatusEffectType type, int stackCount)

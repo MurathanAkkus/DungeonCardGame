@@ -4,36 +4,38 @@ using UnityEngine;
 public class StatusEffectsUI : MonoBehaviour
 {
     [SerializeField] private StatusEffectUI statusEffectUIPrefab;
-    [SerializeField] private Sprite armorSprite, burnSprite;
+    [SerializeField] private Sprite armorSprite, burnSprite, strengthSprite;
 
     private Dictionary<StatusEffectType, StatusEffectUI> statusEffectUIs = new();
 
     public void UpdateStatusEffectUI(StatusEffectType statusEffectType, int stackCount)
     {
         if (stackCount == 0)
-        {   // Eðer yýðýn sayýsý 0 ise, bu durum efekti için UI'yi kaldýr
+            statusEffectUIs[statusEffectType].Set(statusEffectType, sprite, stackCount, color);                      // UI'ya sprite ve yn saysn ayarla
+            StatusEffectType.STRENGTH => strengthSprite,
+            StatusEffectType.STRENGTH => new Color(0.9f, 0.9f, 0.2f),
             if (statusEffectUIs.ContainsKey(statusEffectType))
-            {   // Eðer bu durum efekti için bir UI varsa
-                StatusEffectUI statusEffectUI = statusEffectUIs[statusEffectType]; // Bu durum efekti için mevcut UI'yý edir
-                statusEffectUIs.Remove(statusEffectType);                          // Dictionary'den kaldýr
+            {   // EÃ°er bu durum efekti iÃ§in bir UI varsa
+                StatusEffectUI statusEffectUI = statusEffectUIs[statusEffectType]; // Bu durum efekti iÃ§in mevcut UI'yÃ½ edir
+                statusEffectUIs.Remove(statusEffectType);                          // Dictionary'den kaldÃ½r
                 Destroy(statusEffectUI.gameObject);
             }
         }
         else
         {
-            if (!statusEffectUIs.ContainsKey(statusEffectType))                    // Eðer bu durum efekti için bir UI yoksa
+            if (!statusEffectUIs.ContainsKey(statusEffectType))                    // EÃ°er bu durum efekti iÃ§in bir UI yoksa
             {
-                StatusEffectUI statusEffectUI = Instantiate(statusEffectUIPrefab, transform);   // Yeni bir UI oluþtur
+                StatusEffectUI statusEffectUI = Instantiate(statusEffectUIPrefab, transform);   // Yeni bir UI oluÃ¾tur
                 statusEffectUIs.Add(statusEffectType, statusEffectUI);                          // Dictionary'ye ekle
             }
-            Sprite sprite = GetSpriteByType(statusEffectType);                              // Durum efektine göre sprite'ý al
+            Sprite sprite = GetSpriteByType(statusEffectType);                              // Durum efektine gÃ¶re sprite'Ã½ al
             Color color = GetColorByType(statusEffectType);
-            statusEffectUIs[statusEffectType].Set(sprite, stackCount, color);                      // UI'ya sprite ve yýðýn sayýsýný ayarla
+            statusEffectUIs[statusEffectType].Set(sprite, stackCount, color);                      // UI'ya sprite ve yÃ½Ã°Ã½n sayÃ½sÃ½nÃ½ ayarla
         }
     }
 
     private Sprite GetSpriteByType(StatusEffectType statusEffectType)
-    {   // Durum efektine göre sprite'ý döndür
+    {   // Durum efektine gÃ¶re sprite'Ã½ dÃ¶ndÃ¼r
         return statusEffectType switch
         {
             StatusEffectType.ARMOR => armorSprite,
@@ -43,7 +45,7 @@ public class StatusEffectsUI : MonoBehaviour
     }
 
     private Color GetColorByType(StatusEffectType statusEffectType)
-    {   // Durum efektine göre renkleri döndür
+    {   // Durum efektine gÃ¶re renkleri dÃ¶ndÃ¼r
         return statusEffectType switch
         {
             StatusEffectType.ARMOR => Color.deepSkyBlue,

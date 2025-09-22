@@ -15,11 +15,11 @@ public class CombatantView : MonoBehaviour
 
     private Dictionary<StatusEffectType, int> statusEffects = new Dictionary<StatusEffectType, int>();
 
-    protected void SetupBase(int health, Sprite image, int startingArmor)
+    protected void SetupBase(int health, Sprite image, int startingArmor, int startingStrength)
     {
         MaxHealth = CurrentHealth = health;
 
-        // Sprite null ise patlama
+        // Sprite null ise hata almamak için
         if (spriteRenderer != null && image != null)
             spriteRenderer.sprite = image;
 
@@ -37,6 +37,11 @@ public class CombatantView : MonoBehaviour
         if (startingArmor > 0)
         {
             AddStatusEffect(StatusEffectType.ARMOR, startingArmor);
+        }
+
+        if (startingStrength != 0)
+        {
+            AddStatusEffect(StatusEffectType.STRENGTH, startingStrength);
         }
     }
 

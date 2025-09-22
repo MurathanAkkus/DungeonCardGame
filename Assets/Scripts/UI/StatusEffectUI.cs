@@ -2,7 +2,16 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+// Tek bir durum efekti kullanýcý arayüzü öðesini temsil eder
+public class StatusEffectUI : MonoBehaviour 
+{
+    [SerializeField] private Image image;
+    [SerializeField] private TMP_Text stackCountText;
+
     public void Set(StatusEffectType statusEffectType, Sprite sprite, int stackCount, Color color)
+    {
+        image.sprite = sprite;
+        image.enabled = sprite != null;
 
         bool showStackCount = stackCount > 1;
 
@@ -16,8 +25,16 @@ using UnityEngine.UI;
         }
 
         if (showStackCount)
+        {
             stackCountText.text = GetFormattedStackText(statusEffectType, stackCount);
-
+            stackCountText.color = color;
+            stackCountText.enabled = true;
+        }
+        else
+        {
+            stackCountText.enabled = false;
+        }
+    }
     private static string GetFormattedStackText(StatusEffectType statusEffectType, int stackCount)
     {
         if (statusEffectType == StatusEffectType.STRENGTH && stackCount > 0)
@@ -26,23 +43,5 @@ using UnityEngine.UI;
         }
 
         return stackCount.ToString();
-    }
-    [SerializeField] private Image image;
-    [SerializeField] private TMP_Text stackCountText;
-
-    public void Set(Sprite sprite, int stackCount, Color color)
-    {
-        image.sprite = sprite;
-        image.enabled = sprite != null;
-        if (stackCount > 1)
-        {
-            stackCountText.text = stackCount.ToString();
-            stackCountText.color = color;
-            stackCountText.enabled = true;
-        }
-        else
-        {
-            stackCountText.enabled = false;
-        }
     }
 }

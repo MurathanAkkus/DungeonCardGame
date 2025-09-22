@@ -11,7 +11,7 @@ public class EnemyView : CombatantView
     {
         AttackPower = enemyData.AttackPower;
         UpdateAttackText();
-        SetupBase(enemyData.Health, enemyData.Image, enemyData.StartingArmor);
+        SetupBase(enemyData.Health, enemyData.Image, enemyData.StartingArmor, enemyData.StartingStrength);
     }
 
     private void UpdateAttackText()

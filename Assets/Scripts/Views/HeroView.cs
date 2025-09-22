@@ -1,16 +1,11 @@
-
-        if (heroData.StartingStrength != 0)
-        {
-            AddStatusEffect(StatusEffectType.STRENGTH, heroData.StartingStrength);
-        }
-}
-// Temel savaÅŸÃ§Ä± iÅŸlevselliÄŸini yeniden kullanmak iÃ§in CombatantView'dan devralÄ±r.
+// Hero(biz) için görsel bileşeni temsil eder.
+// Temel savaşçı işlevselliğini yeniden kullanmak için CombatantView'dan devralır.
 public class HeroView : CombatantView
 {
-    // Kahraman gÃ¶rÃ¼nÃ¼mÃ¼nÃ¼ varsayÄ±lan canla ve sprite olmadan baÅŸlatÄ±r.
-    // Bu yÃ¶ntem yeni eklendi ve kahraman iÃ§in temel deÄŸerleri ayarlar.
+    // Kahraman görünümünü varsayılan canla ve sprite olmadan başlatır.
+    // Bu yöntem yeni eklendi ve kahraman için temel değerleri ayarlar.
     public void Setup(HeroData heroData)
     {
-        SetupBase(heroData.Health, heroData.Image, heroData.StartingArmor);
+        SetupBase(heroData.Health, heroData.Image, heroData.StartingArmor, heroData.StartingStrength);
     }
 }

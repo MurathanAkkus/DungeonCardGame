@@ -19,10 +19,10 @@ public class StatusEffectSystem : MonoBehaviour
         {
             target.AddStatusEffect(addStatusEffectGA.StatusEffectType, addStatusEffectGA.StackCount);   // Durum efektini hedefe ekle
             StatusEffectsUI statusEffectsUI = target.GetComponent<StatusEffectsUI>();   // Durum efektleri UI'sini al
+            if (statusEffectsUI != null)    // Eðer hedefte durum efektleri UI'si varsa
+            {
                 int totalStacks = target.GetStatusEffectStackCount(addStatusEffectGA.StatusEffectType);
                 statusEffectsUI.UpdateStatusEffectUI(addStatusEffectGA.StatusEffectType, totalStacks);
-            {
-                statusEffectsUI.UpdateStatusEffectUI(addStatusEffectGA.StatusEffectType, addStatusEffectGA.StackCount);
             }
         }
         yield return null;

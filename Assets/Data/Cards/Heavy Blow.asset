@@ -15,7 +15,7 @@ MonoBehaviour:
   <Description>k__BackingField: Deal <b>16 <color=red>damage</color></b> to a selected
     enemy.
   <Mana>k__BackingField: 3
-  <Image>k__BackingField: {fileID: 21300000, guid: 8609a45d916b2a841b0392e94421589b, type: 3}
+  <Image>k__BackingField: {fileID: 21300000, guid: 471daae0f07c770489a3aefab5eed4dd, type: 3}
   <ManualTargetEffect>k__BackingField:
     rid: 8631130048407797760
   <OtherEffects>k__BackingField: []

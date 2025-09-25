@@ -1,16 +1,33 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using UnityEngine;
 
-// <summary>
-// AddStatusEffectEffect.cs
-// Bu sýnýf, bir statü etkisi eklemek için kullanýlan bir efekt türüdür.
-// </summary>
 public class AddStatusEffectEffect : Effect
 {
-    [SerializeField] private StatusEffectType statusEffectType;
-    [SerializeField] private int stackCount;
+    public enum DurationMode { FromStacks, FixedTurns, Permanent }
+
+    [SerializeField] private StatusEffectType statusEffectType = StatusEffectType.BURN;
+
+    [Header("Effect Power")]
+    [Tooltip("BURN iÃ§in tur baÅŸÄ± hasar; STRENGTH/TEMP iÃ§in +damage")]
+    [SerializeField] private int magnitude = 1;
+
+    [Header("Stacks (UI ve Ã¶zel kurallar iÃ§in)")]
+    [SerializeField] private int stackCount = 0;
+
+    [Header("Duration")]
+    [SerializeField] private DurationMode durationMode = DurationMode.FromStacks;
+    [SerializeField] private int fixedDurationTurns = 1; // DurationMode.FixedTurns iÃ§in
+
     public override GameAction GetGameAction(List<CombatantView> targets, CombatantView caster)
-    {   // Yeni bir AddStatusEffectGA oluþtur ve gerekli parametreleri ata
-        return new AddStatusEffectGA(statusEffectType, stackCount, targets);
+    {
+        int duration = -1;
+        switch (durationMode)
+        {
+            case DurationMode.FromStacks: duration = stackCount; break;
+            case DurationMode.FixedTurns: duration = Mathf.Max(0, fixedDurationTurns); break;
+            case DurationMode.Permanent: duration = -1; break;
+        }
+
+        return new AddStatusEffectGA(statusEffectType, magnitude, stackCount, duration, targets);
     }
 }

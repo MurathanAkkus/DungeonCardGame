@@ -1,11 +1,11 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class HeroSystem : Singleton<HeroSystem>
 {
     // HeroSystem, oyundaki kahramanla ilgili
-    // kahraman seçimi, kahraman istatistikleri
+    // kahraman seÃ§imi, kahraman istatistikleri
     // ve kahraman yetenekleri gibi kahramanla
-    // ilgili iþlevleri yönetmek için geniþletilebilir.
+    // ilgili iÃ¾levleri yÃ¶netmek iÃ§in geniÃ¾letilebilir.
     [field: SerializeField] public HeroView HeroView { get; private set; }
 
     void OnEnable()
@@ -26,8 +26,20 @@ public class HeroSystem : Singleton<HeroSystem>
     }
 
     // -------------------------- Reactions --------------------------
-    private void EnemyTurnPreReaction(EnemyTurnGA enemyTurnGA)
-    {   // Düþman turu baþlamadan önce elindeki tüm kartlarý discard etmek için reaction ekler
+    private void EnemyTurnPreReaction(EnemyTurnGA _)
+    {
+        // Enemy turn baÅŸlamadan Ã¶nce dÃ¼ÅŸmanlarÄ±n burn'Ã¼nÃ¼ uygula
+        foreach (var enemy in EnemySystem.Instance.Enemies)
+        {
+            if (enemy.GetStatusEffectDuration(StatusEffectType.BURN) != 0)
+            {
+                ActionSystem.Instance.AddReaction(new ApplyBurnGA(enemy));
+            }
+        }
+
+        // (burada senin mevcut kart discard, mana reset vs. reaksiyonlarÄ±n varsa onlarÄ± da bÄ±rakalÄ±m)
+
+        // DÃ¼ÅŸman turu baÃ¾lamadan Ã¶nce elindeki tÃ¼m kartlarÃ½ discard etmek iÃ§in reaction ekler
         DiscardAllCardsGA discardAllCardsGA = new DiscardAllCardsGA();
         ActionSystem.Instance.AddReaction(discardAllCardsGA);
     }
@@ -36,10 +48,10 @@ public class HeroSystem : Singleton<HeroSystem>
         int burnStacks = HeroView.GetStatusEffectStackCount(StatusEffectType.BURN);
         if (burnStacks > 0)
         {
-            ApplyBurnGA applyBurnGA = new(burnStacks, HeroView);
+            ApplyBurnGA applyBurnGA = new(HeroView);
             ActionSystem.Instance.AddReaction(applyBurnGA);
         }
-        // Düþman turu bittikten sonra 5 kart çekmek için reaction ekler
+        // DÃ¼Ã¾man turu bittikten sonra 5 kart Ã§ekmek iÃ§in reaction ekler
         DrawCardsGA drawCardsGA = new DrawCardsGA(5);
         ActionSystem.Instance.AddReaction(drawCardsGA);
     }

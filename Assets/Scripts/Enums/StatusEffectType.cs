@@ -2,5 +2,6 @@ public enum StatusEffectType
 {
     ARMOR,
     BURN,
-    STRENGTH
+    STRENGTH,
+    TEMP_STR
 }

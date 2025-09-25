@@ -13,116 +13,178 @@ public class CombatantView : MonoBehaviour
     public int MaxHealth { get; private set; }
     public int CurrentHealth { get; private set; }
 
-    private Dictionary<StatusEffectType, int> statusEffects = new Dictionary<StatusEffectType, int>();
-
-    protected void SetupBase(int health, Sprite image, int startingArmor, int startingStrength)
+    private struct StatusEffectState
     {
-        MaxHealth = CurrentHealth = health;
+        public int Magnitude;   // BURN: tick başına hasar; STRENGTH/TEMP: +damage
+        public int Stacks;      // UI/özel kurallar için
+        public int Duration;    // -1 kalıcı, 0 yok, >0 kalan tur
+    }
 
-        // Sprite null ise hata almamak için
-        if (spriteRenderer != null && image != null)
-            spriteRenderer.sprite = image;
+    private readonly Dictionary<StatusEffectType, StatusEffectState> statusEffects = new();
 
-        UpdateHealthText();
+    // --- PUBLIC API ---
 
-        // Başlangıç zırhını normalize et
-        startingArmor = Mathf.Max(0, startingArmor);
+    public void SetupBase(int maxHealth, Sprite sprite, int startingArmor, int startingStrength)
+    {
+        MaxHealth = maxHealth;
+        CurrentHealth = maxHealth;
+        spriteRenderer.sprite = sprite;
 
-        // Idempotent olsun istiyorum, mevcut ARMOR’u sıfırla
-        int existing = GetStatusEffectStackCount(StatusEffectType.ARMOR);
-        if (existing > 0)
-            RemoveStatusEffect(StatusEffectType.ARMOR, existing);
-
-        // Başlangıç zırhı
         if (startingArmor > 0)
-        {
-            AddStatusEffect(StatusEffectType.ARMOR, startingArmor);
-        }
+            AddStatusEffect(StatusEffectType.ARMOR, magnitude: startingArmor, stacks: startingArmor, duration: -1);
 
-        if (startingStrength != 0)
-        {
-            AddStatusEffect(StatusEffectType.STRENGTH, startingStrength);
-        }
-    }
+        if (startingStrength > 0)
+            AddStatusEffect(StatusEffectType.STRENGTH, magnitude: startingStrength, stacks: startingStrength, duration: -1);
 
-    private void UpdateHealthText()
-    {
-        healthText.text = $"HP: {CurrentHealth}";
-    }
-
-    public void Damage(int damageAmount, bool ignoreArmor = false)
-    {
-        // Negatif/0 koruması (isteğe bağlı)
-        if (damageAmount <= 0)
-        {
-            // yine de küçük bir hit efekti istiyorsan buraya koyabilirsin
-            return;
-        }
-
-        int currentArmor = GetStatusEffectStackCount(StatusEffectType.ARMOR);
-
-        // Zırhı YOK SAY: direkt cana uygula, zırh stack'ini düşürme
-        if (ignoreArmor)
-        {
-            CurrentHealth = Mathf.Max(CurrentHealth - damageAmount, 0);
-        }
-        else
-        {
-            // Zırh hasarı emer ve stack düşer
-            int remainingDamage = Mathf.Max(damageAmount - currentArmor, 0);
-            if (currentArmor > 0)
-                RemoveStatusEffect(StatusEffectType.ARMOR, Mathf.Min(damageAmount, currentArmor));
-
-            CurrentHealth = Mathf.Max(CurrentHealth - remainingDamage, 0);
-        }
-
-        // Ortak VFX/UI
-        transform.DOShakePosition(0.2f, 0.5f);
         UpdateHealthText();
-
-        // (Opsiyonel) event/anim hook'ları
-        // OnDamaged?.Invoke(this, damageAmount, ignoreArmor);
-        // if (CurrentHealth == 0) Die();
     }
 
-    public void PenetratingDamage(int damageAmount)
+    public void Damage(int amount, bool ignoreArmor = false)
     {
-        Damage(damageAmount, ignoreArmor: true);
-    }
+        int dmg = amount;
 
-    public void AddStatusEffect(StatusEffectType type, int stackCount)
-    {
-        if (statusEffects.TryGetValue(type, out int currentCount))
+        if (!ignoreArmor && TryGet(StatusEffectType.ARMOR, out var armor))
         {
-            statusEffects[type] = currentCount + stackCount;
+            int used = Mathf.Min(armor.Magnitude, dmg);
+            armor.Magnitude -= used;
+            armor.Stacks = Mathf.Max(0, armor.Magnitude); // stacks’ı da senkron tutuyorsan
+            dmg -= used;
+
+            statusEffects[StatusEffectType.ARMOR] = armor;
+            if (armor.Magnitude <= 0) RemoveEntire(StatusEffectType.ARMOR);
+            else UpdateUI(StatusEffectType.ARMOR);
+        }
+
+        CurrentHealth = Mathf.Max(0, CurrentHealth - dmg);
+        UpdateHealthText();
+        // VFX/anim vs...
+    }
+
+    // ====== CORE METHODS ======
+
+    public void AddStatusEffect(StatusEffectType type, int magnitude, int stacks, int duration)
+    {
+        if (statusEffects.TryGetValue(type, out var s))
+        {
+            s.Magnitude += Mathf.Max(0, magnitude);
+            s.Stacks += Mathf.Max(0, stacks);
+
+            if (s.Duration < 0 || duration < 0) s.Duration = -1;
+            else if (s.Duration >= 0 && duration >= 0) s.Duration = Mathf.Max(s.Duration, duration);
+
+            statusEffects[type] = s;
         }
         else
         {
-            statusEffects[type] = stackCount;
+            statusEffects[type] = new StatusEffectState
+            {
+                Magnitude = Mathf.Max(0, magnitude),
+                Stacks = Mathf.Max(0, stacks),
+                Duration = duration // -1 kalıcı
+            };
         }
-        statusEffectsUI.UpdateStatusEffectUI(type, statusEffects[type]);
+
+        UpdateUI(type);
     }
 
-    public void RemoveStatusEffect(StatusEffectType type, int stackCount)
+    public void AddStatusEffect(StatusEffectType type, int stacks)
     {
-        if (statusEffects.TryGetValue(type, out int currentCount))
+        // Eski davranış: stacks hem magnitude hem de duration gibi davranıyordu.
+        // Artık daha mantıklı varsayımlar:
+        int magnitude = stacks;      // ör: Strength kartı böyle kullanıyorduysa bozulmasın
+        int duration = stacks;      // ör: Burn için stacks kadar tur
+        AddStatusEffect(type, magnitude, stacks, duration);
+    }
+
+    /// <summary> Yalnızca duration azalt – 0 olursa tamamen sil. </summary>
+    public void DecreaseDuration(StatusEffectType type, int amount)
+    {
+        if (!statusEffects.TryGetValue(type, out var s)) return;
+        if (s.Duration < 0) return; // kalıcı
+
+        s.Duration = Mathf.Max(0, s.Duration - Mathf.Max(0, amount));
+        if (s.Duration == 0) RemoveEntire(type);
+        else
         {
-            currentCount -= stackCount;
-            if (currentCount <= 0)
-            {
-                statusEffects.Remove(type);
-                statusEffectsUI.UpdateStatusEffectUI(type, 0);
-            }
-            else
-            {
-                statusEffects[type] = currentCount;
-                statusEffectsUI.UpdateStatusEffectUI(type, GetStatusEffectStackCount(type));
-            }
+            statusEffects[type] = s;
+            UpdateUI(type);
+        }
+    }
+
+    public void RemoveStatusEffect(StatusEffectType type, int stackAmount)
+    {
+        if (!statusEffects.TryGetValue(type, out var s)) return;
+
+        s.Stacks = Mathf.Max(0, s.Stacks - Mathf.Max(0, stackAmount));
+
+        // Eski mantığa yakın kalmak için: stacks sıfıra inerse tamamen kaldır
+        if (s.Stacks == 0 && s.Duration == 0 && s.Magnitude == 0)
+            RemoveEntire(type);
+        else
+        {
+            statusEffects[type] = s;
+            UpdateUI(type);
         }
     }
 
     public int GetStatusEffectStackCount(StatusEffectType type)
     {
-        return statusEffects.TryGetValue(type, out int count) ? statusEffects[type] : 0;
+        return statusEffects.TryGetValue(type, out var s) ? s.Stacks : 0;
+    }
+
+    public int GetStatusEffectMagnitude(StatusEffectType type)
+    {
+        return statusEffects.TryGetValue(type, out var s) ? s.Magnitude : 0;
+    }
+
+    public int GetStatusEffectDuration(StatusEffectType type)
+    {
+        return statusEffects.TryGetValue(type, out var s) ? s.Duration : 0;
+    }
+
+    public int GetAttackFlatBonus()
+    {
+        int sum = 0;
+        if (statusEffects.TryGetValue(StatusEffectType.STRENGTH, out var s1)) sum += s1.Magnitude;
+        if (statusEffects.TryGetValue(StatusEffectType.TEMP_STR, out var s2))
+        {
+            // yalnızca süresi devam edenler katkı sağlasın
+            if (s2.Duration != 0) sum += s2.Magnitude;
+        }
+        return sum;
+    }
+
+    // ====== HELPERS ======
+
+    private void RemoveEntire(StatusEffectType type)
+    {
+        if (!statusEffects.Remove(type)) return;
+        UpdateUI(type, removed: true);
+    }
+
+    private void UpdateUI(StatusEffectType type, bool removed = false)
+    {
+        if (statusEffectsUI == null) return;
+
+        if (removed)
+        {
+            statusEffectsUI.UpdateStatusEffectUI(type, 0);
+            return;
+        }
+
+        if (statusEffects.TryGetValue(type, out var s))
+        {
+            statusEffectsUI.UpdateStatusEffectUI(type, s.Stacks);
+
+            // UI’nı büyütmek için overload ekleyebiliriz:
+            // statusEffectsUI.UpdateStatusEffectUI(type, s.Stacks, s.Magnitude, s.Duration);
+        }
+    }
+
+    private bool TryGet(StatusEffectType type, out StatusEffectState s) => statusEffects.TryGetValue(type, out s);
+
+    private void UpdateHealthText()
+    {
+        if (healthText != null) healthText.text = $"{CurrentHealth}/{MaxHealth}";
     }
 }

@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 public class BurnSystem : MonoBehaviour
@@ -15,12 +15,19 @@ public class BurnSystem : MonoBehaviour
         ActionSystem.DetachPerformer<ApplyBurnGA>();
     }
 
-    private IEnumerator ApplyBurnPerformer(ApplyBurnGA applyBurnGA)
+    private IEnumerator ApplyBurnPerformer(ApplyBurnGA ga)
     {
-        CombatantView target = applyBurnGA.Target;
-        Instantiate(burnVFX, target.transform.position, Quaternion.identity);
-        target.Damage(applyBurnGA.BurnDamage);
-        target.RemoveStatusEffect(StatusEffectType.BURN, 1);
+        CombatantView target = ga.Target;
+        if (burnVFX != null) Instantiate(burnVFX, target.transform.position, Quaternion.identity);
+
+        // NEW: hasarı CombatantView'dan magnitude olarak çek
+        int burnDamage = target.GetStatusEffectMagnitude(StatusEffectType.BURN);
+        if (burnDamage > 0)
+            target.Damage(burnDamage, ignoreArmor: true);
+
+        // NEW: stacks yerine duration düşür
+        target.DecreaseDuration(StatusEffectType.BURN, 1);
+
         yield return new WaitForSeconds(1f);
     }
 }

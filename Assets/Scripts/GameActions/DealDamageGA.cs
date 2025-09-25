@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 public class DealDamageGA : GameAction, IHaveCaster
 {
@@ -20,13 +20,17 @@ public class DealDamageGA : GameAction, IHaveCaster
 
     private int CalculateModifiedAmount()
     {
-        int modifiedAmount = BaseAmount;
+        int modified = BaseAmount;
 
         if (Caster != null)
         {
-            modifiedAmount += Caster.GetStatusEffectStackCount(StatusEffectType.STRENGTH);
+            // OLD: 
+            //modifiedAmount += Caster.GetStatusEffectStackCount(StatusEffectType.STRENGTH);
+
+            // NEW: CombatantView üstünden birleşik flat bonus
+            modified += Caster.GetAttackFlatBonus();
         }
 
-        return modifiedAmount < 0 ? 0 : modifiedAmount;
+        return modified < 0 ? 0 : modified;
     }
 }

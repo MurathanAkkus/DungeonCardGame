@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 public class StatusEffectSystem : MonoBehaviour
@@ -13,16 +13,19 @@ public class StatusEffectSystem : MonoBehaviour
         ActionSystem.DetachPerformer<AddStatusEffectGA>();
     }
 
-    private IEnumerator AddStatusEffectPerformer(AddStatusEffectGA addStatusEffectGA)
+    private IEnumerator AddStatusEffectPerformer(AddStatusEffectGA ga)
     {
-        foreach (CombatantView target in addStatusEffectGA.Targets) // Her hedefe durum efekti ekle
+        foreach (var target in ga.Targets)
         {
-            target.AddStatusEffect(addStatusEffectGA.StatusEffectType, addStatusEffectGA.StackCount);   // Durum efektini hedefe ekle
-            StatusEffectsUI statusEffectsUI = target.GetComponent<StatusEffectsUI>();   // Durum efektleri UI'sini al
-            if (statusEffectsUI != null)    // E�er hedefte durum efektleri UI'si varsa
+            // NEW: magnitude + stacks + duration
+            target.AddStatusEffect(ga.StatusEffectType, ga.Magnitude, ga.StackCount, ga.Duration);
+
+            var ui = target.GetComponent<StatusEffectsUI>();
+            if (ui != null)
             {
-                int totalStacks = target.GetStatusEffectStackCount(addStatusEffectGA.StatusEffectType);
-                statusEffectsUI.UpdateStatusEffectUI(addStatusEffectGA.StatusEffectType, totalStacks);
+                int totalStacks = target.GetStatusEffectStackCount(ga.StatusEffectType);
+                ui.UpdateStatusEffectUI(ga.StatusEffectType, totalStacks);
+                // İstersen magn+dur ile overload’ı da çağır.
             }
         }
         yield return null;

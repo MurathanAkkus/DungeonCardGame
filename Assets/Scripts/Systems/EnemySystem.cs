@@ -40,7 +40,7 @@ public class EnemySystem : Singleton<EnemySystem>
 
             if ( burnStacks > 0)
             {
-                ApplyBurnGA applyBurnGA = new(burnStacks, enemy);
+                ApplyBurnGA applyBurnGA = new(enemy);
                 ActionSystem.Instance.AddReaction(applyBurnGA);
             }
 

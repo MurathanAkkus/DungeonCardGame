@@ -168,16 +168,18 @@ public class CombatantView : MonoBehaviour
 
         if (removed)
         {
-            statusEffectsUI.UpdateStatusEffectUI(type, 0);
+            statusEffectsUI?.Remove(type);
             return;
         }
 
         if (statusEffects.TryGetValue(type, out var s))
         {
-            statusEffectsUI.UpdateStatusEffectUI(type, s.Stacks);
-
-            // UI’nı büyütmek için overload ekleyebiliriz:
-            // statusEffectsUI.UpdateStatusEffectUI(type, s.Stacks, s.Magnitude, s.Duration);
+            statusEffectsUI.Upsert(new StatusEffectViewModel(
+                type,
+                s.Stacks,
+                s.Magnitude,
+                s.Duration
+            ));
         }
     }
 

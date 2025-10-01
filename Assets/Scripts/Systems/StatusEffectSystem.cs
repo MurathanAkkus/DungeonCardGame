@@ -20,12 +20,16 @@ public class StatusEffectSystem : MonoBehaviour
             // NEW: magnitude + stacks + duration
             target.AddStatusEffect(ga.StatusEffectType, ga.Magnitude, ga.StackCount, ga.Duration);
 
-            var ui = target.GetComponent<StatusEffectsUI>();
+            StatusEffectsUI ui = target.GetComponent<StatusEffectsUI>();
             if (ui != null)
             {
                 int totalStacks = target.GetStatusEffectStackCount(ga.StatusEffectType);
-                ui.UpdateStatusEffectUI(ga.StatusEffectType, totalStacks);
-                // İstersen magn+dur ile overload’ı da çağır.
+                ui.Upsert(new StatusEffectViewModel(
+                    ga.StatusEffectType,
+                    totalStacks,
+                    target.GetStatusEffectMagnitude(ga.StatusEffectType),
+                    target.GetStatusEffectDuration(ga.StatusEffectType)
+                ));
             }
         }
         yield return null;

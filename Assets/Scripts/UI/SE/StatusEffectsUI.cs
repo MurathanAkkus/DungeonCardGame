@@ -11,53 +11,65 @@ public class StatusEffectsUI : MonoBehaviour
 
     public void Upsert(StatusEffectViewModel vm)
     {
-        // Süre 0 veya stacks 0 ise UI’yı kaldır
+        // Süre/stacks 0 ise öğeyi kaldır
         if (vm.Duration == 0 || vm.Stacks == 0)
         {
             Remove(vm.Type);
             return;
         }
 
+        // ---- NULL GUARDS ----
+        if (registry == null)
+        {
+            Debug.LogError("[StatusEffectsUI] Registry assign edilmemiş!");
+            return;
+        }
+
         var desc = registry.Get(vm.Type);
-        if (desc == null) { Remove(vm.Type); return; }
+        if (desc == null)
+        {
+            Debug.LogWarning($"[StatusEffectsUI] Descriptor bulunamadı: {vm.Type}");
+            Remove(vm.Type); // güvenli
+            return;
+        }
 
         if (!_uiByType.TryGetValue(vm.Type, out var ui) || ui == null)
         {
+            if (statusEffectUIPrefab == null)
+            {
+                Debug.LogError("[StatusEffectsUI] Prefab assign edilmemiş!");
+                return;
+            }
             ui = Instantiate(statusEffectUIPrefab, transform);
             _uiByType[vm.Type] = ui;
         }
 
-        ui.Bind(desc, vm);
+        ui.Bind(desc, vm);   // Bind içinde de icon/label null guard olsun (aşağıda)
         ResortByPriority();
     }
 
     public void Remove(StatusEffectType type)
     {
         if (_uiByType.TryGetValue(type, out var ui) && ui != null)
-        {
             Destroy(ui.gameObject);
-        }
         _uiByType.Remove(type);
+    }
+
+    private void ResortByPriority()
+    {
+        var ordered = _uiByType
+            .Select(kv => (kv.Value, Desc: registry?.Get(kv.Key)))
+            .Where(x => x.Value != null && x.Desc != null)
+            .OrderBy(x => x.Desc.Priority)
+            .ToList();
+
+        for (int i = 0; i < ordered.Count; i++)
+            ordered[i].Value.transform.SetSiblingIndex(i);
     }
 
     public void ClearAll()
     {
         foreach (var kv in _uiByType) if (kv.Value) Destroy(kv.Value.gameObject);
         _uiByType.Clear();
-    }
-
-    private void ResortByPriority()
-    {
-        // Çocukları priority’ye göre sırala
-        var ordered = _uiByType
-            .Select(kv => (kv.Value, Desc: registry.Get(kv.Key)))
-            .Where(x => x.Value != null && x.Desc != null)
-            .OrderBy(x => x.Desc.Priority)
-            .ToList();
-
-        for (int i = 0; i < ordered.Count; i++)
-        {
-            ordered[i].Value.transform.SetSiblingIndex(i);
-        }
     }
 }

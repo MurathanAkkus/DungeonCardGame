@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+[CreateAssetMenu(menuName = "CardGame/Status Effect Registry")]
 public class StatusEffectRegistry : MonoBehaviour
 {
     [SerializeField] private List<StatusEffectDescriptor> descriptors = new();

@@ -1,4 +1,4 @@
-using TMPro;
+ï»¿using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,17 +9,17 @@ public class StatusEffectUI : MonoBehaviour
 
     public void Bind(StatusEffectDescriptor desc, StatusEffectViewModel vm)
     {
-        if (icon) { icon.sprite = desc.Icon; icon.color = desc.Tint; }
+        if (icon != null) { icon.sprite = desc.Icon; icon.color = desc.Tint; }
+        else Debug.LogWarning("[StatusEffectUI] icon assign edilmemiÅŸ!");
 
-        if (label)
+        if (label != null)
         {
-            // Gösterilecek alanlara göre bir label derle
-            string typeName = desc.name; // ya da vm.Type.ToString()
+            string typeName = desc.name;
             int stk = desc.ShowStacks ? vm.Stacks : 0;
             int mag = desc.ShowMagnitude ? vm.Magnitude : 0;
             int dur = desc.ShowDuration ? vm.Duration : -1;
-
             label.text = desc.BuildLabel(typeName, stk, mag, dur);
         }
+        else Debug.LogWarning("[StatusEffectUI] label assign edilmemiÅŸ!");
     }
 }

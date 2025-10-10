@@ -451,8 +451,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   statusEffectUIPrefab: {fileID: 4851588301830701563, guid: f50ee049479799641b17ffe91de4f82d, type: 3}
-  armorSprite: {fileID: 21300000, guid: 028cb801f8dbdec439b64e080c55ca76, type: 3}
-  burnSprite: {fileID: 21300000, guid: 92ec568338a0ade46a0d7b5b17a55189, type: 3}
+  registry: {fileID: 0}
 --- !u!222 &8556667283469008490
 CanvasRenderer:
   m_ObjectHideFlags: 0

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(menuName = "CardGame/Status Effect Descriptor")]
+[CreateAssetMenu(menuName = "StatusEffect/Status Effect Descriptor")]
 public class StatusEffectDescriptor : ScriptableObject
 {
     public StatusEffectType Type;

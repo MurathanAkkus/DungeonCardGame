@@ -5,12 +5,15 @@ using UnityEngine;
 public class StatusEffectsUI : MonoBehaviour
 {
     [SerializeField] private StatusEffectUI statusEffectUIPrefab;
-    [SerializeField] private StatusEffectRegistry registry;
+    [SerializeField] private StatusEffectRegistry registry;     // yalnızca Inspector’dan atanacak
 
     private readonly Dictionary<StatusEffectType, StatusEffectUI> _uiByType = new();
 
     public void Upsert(StatusEffectViewModel vm)
     {
+        if (!Application.isPlaying) 
+            return; // Inspector’da değer değiştirirken Unity bazı objeleri “panel’e bağlı değilken” yeniden çizer; bu guard o akışı keser.
+
         // Süre/stacks 0 ise öğeyi kaldır
         if (vm.Duration == 0 || vm.Stacks == 0)
         {
@@ -50,6 +53,9 @@ public class StatusEffectsUI : MonoBehaviour
 
     public void Remove(StatusEffectType type)
     {
+        if (!Application.isPlaying) 
+            return; // Inspector’da değer değiştirirken Unity bazı objeleri “panel’e bağlı değilken” yeniden çizer; bu guard o akışı keser.
+
         if (_uiByType.TryGetValue(type, out var ui) && ui != null)
             Destroy(ui.gameObject);
         _uiByType.Remove(type);
@@ -72,4 +78,15 @@ public class StatusEffectsUI : MonoBehaviour
         foreach (var kv in _uiByType) if (kv.Value) Destroy(kv.Value.gameObject);
         _uiByType.Clear();
     }
+
+#if UNITY_EDITOR
+    void OnValidate()  // Sahnede/Prefab’ta referansları unutursam editörde uyarı verir
+    {   // Auto-wire (FindObjectOfType vs.): bu uyarılar referans unutulmasını anlamanı sağlar ve UI Toolkit hatalarını tetiklemez
+        if (statusEffectUIPrefab == null)
+            Debug.LogWarning("[StatusEffectsUI] 'Status Effect UI Prefab' atanmadı.", this);
+
+        if (registry == null)
+            Debug.LogWarning("[StatusEffectsUI] 'Registry' atanmadı (ScriptableObject asset bekleniyor).", this);
+    }
+#endif
 }

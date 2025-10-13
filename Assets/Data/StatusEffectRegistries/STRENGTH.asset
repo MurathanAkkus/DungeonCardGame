@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ae1d3a5b7c0deb4aa03e057622ec6e2, type: 3}
   m_Name: STRENGTH
   m_EditorClassIdentifier: Assembly-CSharp::StatusEffectDescriptor
-  Type: 0
-  Icon: {fileID: 0}
+  Type: 2
+  Icon: {fileID: 21300000, guid: f9f8a2193d258204194d5114129cee49, type: 3}
   Tint: {r: 1, g: 1, b: 1, a: 1}
   LabelFormat: '{type} x{stk}'
   ShowStacks: 1

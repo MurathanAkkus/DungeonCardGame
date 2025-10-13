@@ -12,4 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56c5c2747886f2e4fb53434e324d8f9b, type: 3}
   m_Name: StatusEffectRegistry
   m_EditorClassIdentifier: Assembly-CSharp::StatusEffectRegistry
-  descriptors: []
+  descriptors:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}

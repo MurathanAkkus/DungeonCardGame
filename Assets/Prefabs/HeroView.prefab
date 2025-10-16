@@ -69,6 +69,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -90,6 +92,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -155,7 +158,7 @@ PrefabInstance:
     - target: {fileID: 6110263123258604732, guid: 192705cc69825d44095269e3fa169e35, type: 3}
       propertyPath: registry
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 11400000, guid: 69f1b06a54591b846a307eee3bbacfc9, type: 2}
     - target: {fileID: 7460135521846670072, guid: 192705cc69825d44095269e3fa169e35, type: 3}
       propertyPath: m_Name
       value: CombatantViewBase

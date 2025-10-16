@@ -17,6 +17,6 @@ MonoBehaviour:
   Tint: {r: 1, g: 1, b: 1, a: 1}
   LabelFormat: '{type} x{stk}'
   ShowStacks: 1
-  ShowMagnitude: 0
+  ShowMagnitude: 1
   ShowDuration: 0
   Priority: 100

@@ -18,5 +18,5 @@ MonoBehaviour:
   LabelFormat: '{type} x{stk}'
   ShowStacks: 1
   ShowMagnitude: 0
-  ShowDuration: 0
+  ShowDuration: 1
   Priority: 100

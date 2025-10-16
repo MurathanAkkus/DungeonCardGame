@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: StatusEffectRegistry
   m_EditorClassIdentifier: Assembly-CSharp::StatusEffectRegistry
   descriptors:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 11400000, guid: bf297bc95dd632442874b2bd4fb3e078, type: 2}
+  - {fileID: 11400000, guid: 9ef6766d1425ca24e855d26f76788fa2, type: 2}
+  - {fileID: 11400000, guid: 6672ebe6b45435446a2ea95ea9cc6cfe, type: 2}
+  - {fileID: 11400000, guid: f4d8644c9b5b29b4d857adf46fc09826, type: 2}

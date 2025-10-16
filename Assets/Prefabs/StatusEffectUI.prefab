@@ -51,8 +51,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d6481ad5afd1d94eb3f5851ddfe1ea2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  image: {fileID: 95196046780349647}
-  stackCountText: {fileID: 5932953398446484885}
+  icon: {fileID: 95196046780349647}
+  label: {fileID: 5932953398446484885}
 --- !u!222 &3014120689544929056
 CanvasRenderer:
   m_ObjectHideFlags: 0

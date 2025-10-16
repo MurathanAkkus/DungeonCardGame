@@ -2,10 +2,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-[CreateAssetMenu(menuName = "StatusEffect/Status Effect Registry")]
+[CreateAssetMenu(fileName = "StatusEffectRegistry", menuName = "CardGame/Status Effect Registry")]
 public class StatusEffectRegistry : ScriptableObject
 {
-    [SerializeField] private List<StatusEffectDescriptor> descriptors = new();
+    public List<StatusEffectDescriptor> descriptors = new();
 
     private Dictionary<StatusEffectType, StatusEffectDescriptor> _map;
 

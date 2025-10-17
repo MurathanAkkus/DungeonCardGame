@@ -7,6 +7,8 @@ public class StatusEffectsUI : MonoBehaviour
     [SerializeField] private StatusEffectUI statusEffectUIPrefab;
     [SerializeField] private StatusEffectRegistry registry;     // yalnızca Inspector’dan atanacak
 
+    public bool HasRegistry() => registry != null && statusEffectUIPrefab != null;
+
     private readonly Dictionary<StatusEffectType, StatusEffectUI> _uiByType = new();
 
     public void Upsert(StatusEffectViewModel vm)

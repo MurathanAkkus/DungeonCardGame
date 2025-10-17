@@ -15,7 +15,7 @@ MonoBehaviour:
   Type: 1
   Icon: {fileID: 21300000, guid: 92ec568338a0ade46a0d7b5b17a55189, type: 3}
   Tint: {r: 1, g: 1, b: 1, a: 1}
-  LabelFormat: '{type} x{stk}'
+  LabelFormat: '{stk}'
   ShowStacks: 1
   ShowMagnitude: 0
   ShowDuration: 1

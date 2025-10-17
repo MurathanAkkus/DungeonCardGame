@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b99aeb6abf3edcc47b1cd8b7d1106354, type: 3}
   m_Name: Take Cover
   m_EditorClassIdentifier: 
-  <Description>k__BackingField: Add <b>10 <color=blue>armor</color></b> and <b><color=yellow>draw</color>
+  <Description>k__BackingField: Add <b>6 <color=blue>armor</color></b> and <b><color=yellow>draw</color>
     1</b> card.
   <Mana>k__BackingField: 2
   <Image>k__BackingField: {fileID: 21300000, guid: 519d31e85d4f78b43862a34b7460a3a2, type: 3}
@@ -20,9 +20,9 @@ MonoBehaviour:
     rid: -2
   <OtherEffects>k__BackingField:
   - <TargetMode>k__BackingField:
-      rid: 8631130048407797767
+      rid: 656356061730832460
     <Effect>k__BackingField:
-      rid: 8631130048407797768
+      rid: 656356061730832461
   - <TargetMode>k__BackingField:
       rid: 8631130048407797765
     <Effect>k__BackingField:
@@ -32,6 +32,17 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 656356061730832460
+      type: {class: HeroTM, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 656356061730832461
+      type: {class: AddStatusEffectEffect, ns: , asm: Assembly-CSharp}
+      data:
+        statusEffectType: 0
+        magnitude: 6
+        stackCount: 6
+        durationMode: 2
+        fixedDurationTurns: -1
     - rid: 8631130048407797765
       type: {class: NoTM, ns: , asm: Assembly-CSharp}
       data: 
@@ -39,11 +50,3 @@ MonoBehaviour:
       type: {class: DrawCardsEffect, ns: , asm: Assembly-CSharp}
       data:
         drawAmount: 1
-    - rid: 8631130048407797767
-      type: {class: NoTM, ns: , asm: Assembly-CSharp}
-      data: 
-    - rid: 8631130048407797768
-      type: {class: AddStatusEffectEffect, ns: , asm: Assembly-CSharp}
-      data:
-        statusEffectType: 0
-        stackCount: 10

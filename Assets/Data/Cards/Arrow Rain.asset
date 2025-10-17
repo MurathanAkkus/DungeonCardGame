@@ -33,4 +33,5 @@ MonoBehaviour:
     - rid: 3410941519082291454
       type: {class: DealDamageEffect, ns: , asm: Assembly-CSharp}
       data:
-        damageAmount: 10
+        damageAmount: 7
+        ignoreArmor: 0

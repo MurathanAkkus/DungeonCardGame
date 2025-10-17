@@ -32,8 +32,8 @@ MonoBehaviour:
         statusEffectType: 0
         magnitude: -5
         stackCount: -5
-        durationMode: 0
-        fixedDurationTurns: 5
+        durationMode: 2
+        fixedDurationTurns: -1
     - rid: 8631130255838412873
       type: {class: OtherTM, ns: , asm: Assembly-CSharp}
       data: 
@@ -41,7 +41,7 @@ MonoBehaviour:
       type: {class: AddStatusEffectEffect, ns: , asm: Assembly-CSharp}
       data:
         statusEffectType: 0
-        magnitude: 1
+        magnitude: -1
         stackCount: -1
-        durationMode: 0
-        fixedDurationTurns: 1
+        durationMode: 2
+        fixedDurationTurns: -1

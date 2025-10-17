@@ -66,21 +66,43 @@ public class CombatantView : MonoBehaviour
     {
         if (statusEffects.TryGetValue(type, out var s))
         {
-            s.Magnitude += Mathf.Max(0, magnitude);
-            s.Stacks += Mathf.Max(0, stacks);
+            // DELTA mantığı: gelen değerleri direkt ekle/çıkar
+            s.Magnitude += magnitude;
+            s.Stacks += stacks;
 
+            // ARMOR için stacks'i magnitude ile senkron tut (UI düzgün görünsün)
+            if (type == StatusEffectType.ARMOR)
+                s.Stacks = s.Magnitude;
+
+            // Alt sınıra kıstır
+            s.Magnitude = Mathf.Max(0, s.Magnitude);
+            s.Stacks = Mathf.Max(0, s.Stacks);
+
+            // Süre kuralı (eski ile aynı)
             if (s.Duration < 0 || duration < 0) s.Duration = -1;
             else if (s.Duration >= 0 && duration >= 0) s.Duration = Mathf.Max(s.Duration, duration);
+
+            // Boşaldıysa kaldır
+            if (s.Magnitude == 0 && s.Stacks == 0 && s.Duration != -1)
+            {
+                RemoveEntire(type);
+                return;
+            }
 
             statusEffects[type] = s;
         }
         else
         {
+            // İlk kez ekleniyorsa – negatif gelirse 0'a kıstır
+            var mag = Mathf.Max(0, magnitude);
+            var stk = Mathf.Max(0, stacks);
+            if (type == StatusEffectType.ARMOR) stk = mag;
+
             statusEffects[type] = new StatusEffectState
             {
-                Magnitude = Mathf.Max(0, magnitude),
-                Stacks = Mathf.Max(0, stacks),
-                Duration = duration // -1 kalıcı
+                Magnitude = mag,
+                Stacks = stk,
+                Duration = duration
             };
         }
 

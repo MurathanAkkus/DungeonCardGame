@@ -31,7 +31,7 @@ MonoBehaviour:
       data:
         statusEffectType: 0
         magnitude: -5
-        stackCount: -5
+        stackCount: 0
         durationMode: 2
         fixedDurationTurns: -1
     - rid: 8631130255838412873
@@ -42,6 +42,6 @@ MonoBehaviour:
       data:
         statusEffectType: 0
         magnitude: -1
-        stackCount: -1
+        stackCount: 0
         durationMode: 2
         fixedDurationTurns: -1

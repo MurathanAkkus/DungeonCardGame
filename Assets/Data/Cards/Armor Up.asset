@@ -35,6 +35,6 @@ MonoBehaviour:
       data:
         statusEffectType: 0
         magnitude: 6
-        stackCount: 6
+        stackCount: 0
         durationMode: 2
         fixedDurationTurns: -1

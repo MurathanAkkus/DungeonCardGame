@@ -51,8 +51,10 @@ public class CombatantView : MonoBehaviour
             dmg -= used;
 
             statusEffects[StatusEffectType.ARMOR] = armor;
-            if (armor.Magnitude <= 0) RemoveEntire(StatusEffectType.ARMOR);
-            else UpdateUI(StatusEffectType.ARMOR);
+            if (armor.Magnitude <= 0) 
+                RemoveEntire(StatusEffectType.ARMOR);
+            else 
+                UpdateUI(StatusEffectType.ARMOR);
         }
 
         CurrentHealth = Mathf.Max(0, CurrentHealth - dmg);
@@ -89,6 +91,7 @@ public class CombatantView : MonoBehaviour
                 return;
             }
 
+
             statusEffects[type] = s;
         }
         else
@@ -106,6 +109,10 @@ public class CombatantView : MonoBehaviour
             };
         }
 
+        var cur = statusEffects[type];
+        SyncStacks(type, ref cur);
+        statusEffects[type] = cur;
+
         UpdateUI(type);
     }
 
@@ -121,13 +128,17 @@ public class CombatantView : MonoBehaviour
     /// <summary> Yalnızca duration azalt – 0 olursa tamamen sil. </summary>
     public void DecreaseDuration(StatusEffectType type, int amount)
     {
-        if (!statusEffects.TryGetValue(type, out var s)) return;
-        if (s.Duration < 0) return; // kalıcı
+        if (!statusEffects.TryGetValue(type, out var s)) 
+            return;
+        if (s.Duration < 0) 
+            return; // kalıcı
 
         s.Duration = Mathf.Max(0, s.Duration - Mathf.Max(0, amount));
-        if (s.Duration == 0) RemoveEntire(type);
+        if (s.Duration == 0) 
+            RemoveEntire(type);
         else
         {
+            SyncStacks(type, ref s);
             statusEffects[type] = s;
             UpdateUI(type);
         }
@@ -135,7 +146,8 @@ public class CombatantView : MonoBehaviour
 
     public void RemoveStatusEffect(StatusEffectType type, int stackAmount)
     {
-        if (!statusEffects.TryGetValue(type, out var s)) return;
+        if (!statusEffects.TryGetValue(type, out var s)) 
+            return;
 
         s.Stacks = Mathf.Max(0, s.Stacks - Mathf.Max(0, stackAmount));
 
@@ -171,22 +183,46 @@ public class CombatantView : MonoBehaviour
         if (statusEffects.TryGetValue(StatusEffectType.TEMP_STR, out var s2))
         {
             // yalnızca süresi devam edenler katkı sağlasın
-            if (s2.Duration != 0) sum += s2.Magnitude;
+            if (s2.Duration != 0) 
+                sum += s2.Magnitude;
         }
         return sum;
     }
 
     // ====== HELPERS ======
 
+    private void SyncStacks(StatusEffectType type, ref StatusEffectState s)
+    {
+        switch (type)
+        {
+            case StatusEffectType.BURN:
+                // BURN’de ikon üstünde kalan turu gösterir
+                if (s.Duration >= 0) 
+                    s.Stacks = s.Duration; // kalan turu göster
+                else 
+                    s.Stacks = Mathf.Max(0, s.Stacks); // -1 kalıcı ise elleme
+                break;
+
+            case StatusEffectType.ARMOR:
+            case StatusEffectType.STRENGTH:
+            case StatusEffectType.TEMP_STR:
+                // Bu tiplerde stacks = power
+                s.Stacks = Mathf.Max(0, s.Magnitude);
+                break;
+        }
+    }
+
     private void RemoveEntire(StatusEffectType type)
     {
-        if (!statusEffects.Remove(type)) return;
+        if (!statusEffects.Remove(type)) 
+            return;
         UpdateUI(type, removed: true);
     }
 
     private void UpdateUI(StatusEffectType type, bool removed = false)
     {
-        if (statusEffectsUI == null) return;
+        if (statusEffectsUI == null) 
+            return;
 
         if (removed)
         {
@@ -209,6 +245,7 @@ public class CombatantView : MonoBehaviour
 
     private void UpdateHealthText()
     {
-        if (healthText != null) healthText.text = $"{CurrentHealth}/{MaxHealth}";
+        if (healthText != null) 
+            healthText.text = $"{CurrentHealth}/{MaxHealth}";
     }
 }

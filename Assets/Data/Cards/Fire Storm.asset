@@ -37,4 +37,4 @@ MonoBehaviour:
         magnitude: 1
         stackCount: 3
         durationMode: 1
-        fixedDurationTurns: 1
+        fixedDurationTurns: 3

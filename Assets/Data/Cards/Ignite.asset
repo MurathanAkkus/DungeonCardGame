@@ -26,7 +26,7 @@ MonoBehaviour:
       type: {class: AddStatusEffectEffect, ns: , asm: Assembly-CSharp}
       data:
         statusEffectType: 1
-        magnitude: 0
+        magnitude: 1
         stackCount: 3
-        durationMode: 0
+        durationMode: 1
         fixedDurationTurns: 3

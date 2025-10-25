@@ -15,7 +15,7 @@ MonoBehaviour:
   <Description>k__BackingField: Add <b>3 <color=orange>burn</color></b> to a selected
     enemy.
   <Mana>k__BackingField: 1
-  <Image>k__BackingField: {fileID: 0}
+  <Image>k__BackingField: {fileID: 21300000, guid: 92ec568338a0ade46a0d7b5b17a55189, type: 3}
   <ManualTargetEffect>k__BackingField:
     rid: 8631130048407797764
   <OtherEffects>k__BackingField: []

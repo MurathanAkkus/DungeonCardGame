@@ -96,7 +96,6 @@ public class CombatantView : MonoBehaviour
         }
         else
         {
-            // İlk kez ekleniyorsa – negatif gelirse 0'a kıstır
             var mag = Mathf.Max(0, magnitude);
             var stk = Mathf.Max(0, stacks);
             if (type == StatusEffectType.ARMOR) stk = mag;
@@ -118,20 +117,17 @@ public class CombatantView : MonoBehaviour
 
     public void AddStatusEffect(StatusEffectType type, int stacks)
     {
-        // Eski davranış: stacks hem magnitude hem de duration gibi davranıyordu.
-        // Artık daha mantıklı varsayımlar:
-        int magnitude = stacks;      // ör: Strength kartı böyle kullanıyorduysa bozulmasın
-        int duration = stacks;      // ör: Burn için stacks kadar tur
+        int magnitude = stacks;     
+        int duration = stacks;      
         AddStatusEffect(type, magnitude, stacks, duration);
     }
 
-    /// <summary> Yalnızca duration azalt – 0 olursa tamamen sil. </summary>
     public void DecreaseDuration(StatusEffectType type, int amount)
     {
         if (!statusEffects.TryGetValue(type, out var s)) 
             return;
         if (s.Duration < 0) 
-            return; // kalıcı
+            return;
 
         s.Duration = Mathf.Max(0, s.Duration - Mathf.Max(0, amount));
         if (s.Duration == 0) 
@@ -151,7 +147,6 @@ public class CombatantView : MonoBehaviour
 
         s.Stacks = Mathf.Max(0, s.Stacks - Mathf.Max(0, stackAmount));
 
-        // Eski mantığa yakın kalmak için: stacks sıfıra inerse tamamen kaldır
         if (s.Stacks == 0 && s.Duration == 0 && s.Magnitude == 0)
             RemoveEntire(type);
         else
@@ -182,7 +177,6 @@ public class CombatantView : MonoBehaviour
         if (statusEffects.TryGetValue(StatusEffectType.STRENGTH, out var s1)) sum += s1.Magnitude;
         if (statusEffects.TryGetValue(StatusEffectType.TEMP_STR, out var s2))
         {
-            // yalnızca süresi devam edenler katkı sağlasın
             if (s2.Duration != 0) 
                 sum += s2.Magnitude;
         }
@@ -196,17 +190,15 @@ public class CombatantView : MonoBehaviour
         switch (type)
         {
             case StatusEffectType.BURN:
-                // BURN’de ikon üstünde kalan turu gösterir
                 if (s.Duration >= 0) 
-                    s.Stacks = s.Duration; // kalan turu göster
+                    s.Stacks = s.Duration; 
                 else 
-                    s.Stacks = Mathf.Max(0, s.Stacks); // -1 kalıcı ise elleme
+                    s.Stacks = Mathf.Max(0, s.Stacks);
                 break;
 
             case StatusEffectType.ARMOR:
             case StatusEffectType.STRENGTH:
             case StatusEffectType.TEMP_STR:
-                // Bu tiplerde stacks = power
                 s.Stacks = Mathf.Max(0, s.Magnitude);
                 break;
         }

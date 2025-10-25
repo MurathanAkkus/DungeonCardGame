@@ -20,12 +20,10 @@ public class BurnSystem : MonoBehaviour
         CombatantView target = ga.Target;
         if (burnVFX != null) Instantiate(burnVFX, target.transform.position, Quaternion.identity);
 
-        // NEW: hasarı CombatantView'dan magnitude olarak çek
         int burnDamage = target.GetStatusEffectMagnitude(StatusEffectType.BURN);
         if (burnDamage > 0)
             target.Damage(burnDamage, ignoreArmor: true);
 
-        // NEW: stacks yerine duration düşür
         target.DecreaseDuration(StatusEffectType.BURN, 1);
 
         yield return new WaitForSeconds(1f);

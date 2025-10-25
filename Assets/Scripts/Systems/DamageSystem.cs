@@ -18,15 +18,20 @@ public class DamageSystem : MonoBehaviour
     {
         foreach (var target in dealDamageGA.Targets)
         {
+            if (target == null) 
+                continue;
+
             target.Damage(dealDamageGA.Amount, ignoreArmor: dealDamageGA.IgnoreArmor);
 
-            Instantiate(damageVFX, target.transform.position, Quaternion.identity);
+            if (target != null && target.gameObject != null)
+                Instantiate(damageVFX, target.transform.position, Quaternion.identity);
+
             yield return new WaitForSeconds(0.15f); // Hasar animasyonu için bekle
 
             if (target.CurrentHealth <= 0)
             {
                 // Eðer hedefin caný sýfýr veya altýna düþtüyse, düþmaný öldür
-                if (target is EnemyView enemyView)
+                if (target is EnemyView enemyView && enemyView != null)
                 {
                     KillEnemyGA killEnemyGA = new KillEnemyGA(enemyView);
                     ActionSystem.Instance.AddReaction(killEnemyGA);

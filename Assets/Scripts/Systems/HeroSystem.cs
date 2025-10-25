@@ -10,6 +10,7 @@ public class HeroSystem : Singleton<HeroSystem>
 
     void OnEnable()
     {
+        // Düşmanların BURN tıkları: düşman turu BAŞI (PRE)
         ActionSystem.SubscribeReaction<EnemyTurnGA>(EnemyTurnPreReaction, ReactionTiming.PRE);
         ActionSystem.SubscribeReaction<EnemyTurnGA>(EnemyTurnPostReaction, ReactionTiming.POST);
     }
@@ -28,16 +29,7 @@ public class HeroSystem : Singleton<HeroSystem>
     // -------------------------- Reactions --------------------------
     private void EnemyTurnPreReaction(EnemyTurnGA _)
     {
-        // Enemy turn başlamadan önce düşmanların burn'ünü uygula
-        foreach (var enemy in EnemySystem.Instance.Enemies)
-        {
-            if (enemy.GetStatusEffectDuration(StatusEffectType.BURN) != 0)
-            {
-                ActionSystem.Instance.AddReaction(new ApplyBurnGA(enemy));
-            }
-        }
-
-        // (burada senin mevcut kart discard, mana reset vs. reaksiyonların varsa onları da bırakalım)
+        // (burada mevcut kart discard, mana reset vs. reaksiyonları varsa onları da bırakalım)
 
         // Düşman turu baþlamadan önce elindeki tüm kartlarý discard etmek için reaction ekler
         DiscardAllCardsGA discardAllCardsGA = new DiscardAllCardsGA();
